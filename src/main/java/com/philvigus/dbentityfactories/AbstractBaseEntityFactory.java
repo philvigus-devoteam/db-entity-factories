@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -23,11 +24,14 @@ public abstract class AbstractBaseEntityFactory<T> {
 
     protected Map<String, Object> customAttributes;
 
+    protected Map<String, Object> defaultAttributes;
+
     protected AbstractBaseEntityFactory(final Class<T> entityClass, final JpaRepository<T, Long> repository) {
         this.entityClass = entityClass;
         this.faker = new Faker();
         this.repository = repository;
         this.customAttributes = new ConcurrentHashMap<>();
+        this.defaultAttributes = new ConcurrentHashMap<>();
     }
 
     @Transactional
@@ -104,12 +108,11 @@ public abstract class AbstractBaseEntityFactory<T> {
     }
 
     protected Map<String, Object> getCombinedAttributes(final Map<String, Object> customAttributes) {
-        final Map<String, Object> defaultAttributes = getDefaultAttributes();
+        Map<String, Object> combinedAttributes = new HashMap<>();
+        
+        combinedAttributes.putAll(defaultAttributes);
+        combinedAttributes.putAll(customAttributes);
 
-        defaultAttributes.putAll(customAttributes);
-
-        return defaultAttributes;
+        return combinedAttributes;
     }
-
-    protected abstract Map<String, Object> getDefaultAttributes();
 }
