@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.IntStream;
 
 import static org.apache.commons.beanutils.BeanUtils.setProperty;
 
@@ -30,39 +31,35 @@ public abstract class AbstractBaseEntityFactory<T> {
     }
 
     @Transactional
-    public List<T> create(final int copies) throws EntityFactoryException {
+    public List<T> create(final int copies) {
         if (copies < 1) {
             throw new IllegalArgumentException("copies must be greater than 0");
         }
 
         final List<T> entities = new ArrayList<>(copies);
 
-        for (int i = 0; i < copies; i++) {
-            entities.add(create());
-        }
+        IntStream.range(0, copies).forEach(i -> entities.add(create()));
 
         return entities;
     }
 
-    public T create() throws EntityFactoryException {
+    public T create() {
         return repository.save(getEntityWithAttributesSet(customAttributes));
     }
 
-    public List<T> make(final int copies) throws EntityFactoryException {
+    public List<T> make(final int copies) {
         if (copies < 1) {
             throw new IllegalArgumentException("copies must be greater than 0");
         }
 
         final List<T> entities = new ArrayList<>(copies);
 
-        for (int i = 0; i < copies; i++) {
-            entities.add(make());
-        }
+        IntStream.range(0, copies).forEach(i -> entities.add(make()));
 
         return entities;
     }
 
-    public T make() throws EntityFactoryException {
+    public T make() {
         return getEntityWithAttributesSet(customAttributes);
     }
 
@@ -72,36 +69,42 @@ public abstract class AbstractBaseEntityFactory<T> {
         return this;
     }
 
-    protected T getEntityWithAttributesSet(final Map<String, Object> customAttributes)
-            throws EntityFactoryException {
-        final T entity;
+    protected T getEntityWithAttributesSet(final Map<String, Object> customAttributes) {
+        final T entity = instantiateEntity();
 
+        return setEntityAttributes(entity, customAttributes);
+    }
+
+    protected T instantiateEntity() {
         try {
-            entity = entityClass.getDeclaredConstructor().newInstance();
+            return entityClass.getDeclaredConstructor().newInstance();
         } catch (InstantiationException
                  | IllegalAccessException
                  | IllegalArgumentException
                  | InvocationTargetException
                  | NoSuchMethodException e) {
-            throw new EntityFactoryException(String.format("Unable to create entity of type %s", entityClass), e);
+            throw new EntityFactoryException(String.format("Unable to instantiate entity of type %s", entityClass), e);
         }
+    }
 
+    protected T setEntityAttributes(final T entity, final Map<String, Object> customAttributes) {
         getCombinedAttributes(customAttributes)
-                .forEach(
-                        (name, value) -> {
-                            try {
-                                setProperty(entity, name, value);
-                            } catch (IllegalAccessException | InvocationTargetException e) {
-                                throw new EntityFactoryException(
-                                        String.format("Unable to set property %s to %s on entity of type %s", name, value, entityClass), e);
-                            }
-                        });
+                .forEach((name, value) -> setEntityAttribute(entity, name, value));
 
         return entity;
     }
 
+    protected void setEntityAttribute(final T entity, final String attributeName, final Object attributeValue) {
+        try {
+            setProperty(entity, attributeName, attributeValue);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new EntityFactoryException(
+                    String.format("Unable to set property %s to %s on entity of type %s", attributeName, attributeValue, entityClass), e);
+        }
+    }
+
     protected Map<String, Object> getCombinedAttributes(final Map<String, Object> customAttributes) {
-        Map<String, Object> defaultAttributes = getDefaultAttributes();
+        final Map<String, Object> defaultAttributes = getDefaultAttributes();
 
         defaultAttributes.putAll(customAttributes);
 

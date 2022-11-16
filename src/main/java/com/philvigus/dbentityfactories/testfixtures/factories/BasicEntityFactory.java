@@ -14,7 +14,7 @@ public class BasicEntityFactory extends AbstractBaseEntityFactory<BasicEntity> {
 
     @Override
     protected Map<String, Object> getDefaultAttributes() {
-        Map<String, Object> map = new ConcurrentHashMap<>();
+        final Map<String, Object> map = new ConcurrentHashMap<>();
 
         map.put("myLongAttribute",
                 faker.number().numberBetween(1L, 5L));

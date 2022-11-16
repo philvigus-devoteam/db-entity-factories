@@ -31,7 +31,7 @@ class AbstractBaseEntityFactoryTest {
 
     @Test
     void makeCanReturnASingleBasicEntityWithItsAttributesCorrectlySet() {
-        BasicEntity basicEntity = basicEntityFactory.make();
+        final BasicEntity basicEntity = basicEntityFactory.make();
 
         assertBasicEntityCorrectlyMadeWithDefaultAttributes(basicEntity);
     }
@@ -40,7 +40,7 @@ class AbstractBaseEntityFactoryTest {
     void makeCanReturnAListOfMultipleBasicEntitiesWithTheirAttributesCorrectlySet() {
         final int numberOfEntities = 2;
 
-        List<BasicEntity> basicEntities = basicEntityFactory.make(numberOfEntities);
+        final List<BasicEntity> basicEntities = basicEntityFactory.make(numberOfEntities);
 
         assertEquals(numberOfEntities, basicEntities.size());
         assertBasicEntityCorrectlyMadeWithDefaultAttributes(basicEntities.get(0));
@@ -52,7 +52,7 @@ class AbstractBaseEntityFactoryTest {
         final Long customLongValue = 999L;
         final String customStringValue = "a custom string value";
 
-        BasicEntity basicEntity = basicEntityFactory.withAttributes(
+        final BasicEntity basicEntity = basicEntityFactory.withAttributes(
                 Map.of("myLongAttribute", customLongValue, "myStringAttribute", customStringValue)
         ).make();
 
@@ -68,7 +68,7 @@ class AbstractBaseEntityFactoryTest {
         final Long customLongValue = 999L;
         final String customStringValue = "a custom string value";
 
-        List<BasicEntity> basicEntities = basicEntityFactory.withAttributes(
+        final List<BasicEntity> basicEntities = basicEntityFactory.withAttributes(
                 Map.of("myLongAttribute", customLongValue, "myStringAttribute", customStringValue)
         ).make(numberOfEntities);
 
@@ -90,8 +90,8 @@ class AbstractBaseEntityFactoryTest {
 
     @Test
     void createCanReturnAndSaveASingleBasicEntityWithItsAttributesCorrectlySetToTheDatabase() {
-        BasicEntity basicEntity = basicEntityFactory.create();
-        List<BasicEntity> savedEntities = basicEntityRepository.findAll();
+        final BasicEntity basicEntity = basicEntityFactory.create();
+        final List<BasicEntity> savedEntities = basicEntityRepository.findAll();
 
         assertBasicEntityCorrectlyCreatedWithDefaultAttributes(basicEntity);
 
@@ -103,8 +103,8 @@ class AbstractBaseEntityFactoryTest {
     void createCanReturnAndSaveMultipleBasicEntitiesWithTheirAttributesCorrectlySetToTheDatabase() {
         final int numberOfEntities = 2;
 
-        List<BasicEntity> basicEntities = basicEntityFactory.create(numberOfEntities);
-        List<BasicEntity> savedEntities = basicEntityRepository.findAll();
+        final List<BasicEntity> basicEntities = basicEntityFactory.create(numberOfEntities);
+        final List<BasicEntity> savedEntities = basicEntityRepository.findAll();
 
         assertEquals(numberOfEntities, basicEntities.size());
         assertBasicEntityCorrectlyCreatedWithDefaultAttributes(basicEntities.get(0));
@@ -120,11 +120,11 @@ class AbstractBaseEntityFactoryTest {
         final Long customLongValue = 999L;
         final String customStringValue = "a custom string value";
 
-        BasicEntity basicEntity = basicEntityFactory.withAttributes(
+        final BasicEntity basicEntity = basicEntityFactory.withAttributes(
                 Map.of("myLongAttribute", customLongValue, "myStringAttribute", customStringValue)
         ).create();
 
-        List<BasicEntity> savedEntities = basicEntityRepository.findAll();
+        final List<BasicEntity> savedEntities = basicEntityRepository.findAll();
 
         assertTrue(basicEntity instanceof BasicEntity);
         assertTrue(basicEntity.getId() instanceof Long);
@@ -141,11 +141,11 @@ class AbstractBaseEntityFactoryTest {
         final Long customLongValue = 999L;
         final String customStringValue = "a custom string value";
 
-        List<BasicEntity> basicEntities = basicEntityFactory.withAttributes(
+        final List<BasicEntity> basicEntities = basicEntityFactory.withAttributes(
                 Map.of("myLongAttribute", customLongValue, "myStringAttribute", customStringValue)
         ).create(numberOfEntities);
 
-        List<BasicEntity> savedEntities = basicEntityRepository.findAll();
+        final List<BasicEntity> savedEntities = basicEntityRepository.findAll();
 
         assertEquals(numberOfEntities, basicEntities.size());
 
