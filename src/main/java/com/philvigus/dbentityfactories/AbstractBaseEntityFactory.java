@@ -22,8 +22,8 @@ public abstract class AbstractBaseEntityFactory<T> {
 
     protected final JpaRepository<T, Long> repository;
 
-    protected Map<String, Object> customAttributes;
-    protected Map<String, Object> defaultAttributes;
+    protected Map<String, Attribute> customAttributes;
+    protected Map<String, Attribute> defaultAttributes;
 
     protected AbstractBaseEntityFactory(final Class<T> entityClass, final JpaRepository<T, Long> repository) {
         this.entityClass = entityClass;
@@ -66,13 +66,13 @@ public abstract class AbstractBaseEntityFactory<T> {
         return getEntityWithAttributesSet(customAttributes);
     }
 
-    public AbstractBaseEntityFactory<T> withAttributes(final Map<String, Object> customAttributes) {
+    public AbstractBaseEntityFactory<T> withAttributes(final Map<String, Attribute> customAttributes) {
         this.customAttributes = customAttributes;
 
         return this;
     }
 
-    protected T getEntityWithAttributesSet(final Map<String, Object> customAttributes) {
+    protected T getEntityWithAttributesSet(final Map<String, Attribute> customAttributes) {
         final T entity = instantiateEntity();
 
         return setEntityAttributes(entity, customAttributes);
@@ -90,24 +90,24 @@ public abstract class AbstractBaseEntityFactory<T> {
         }
     }
 
-    protected T setEntityAttributes(final T entity, final Map<String, Object> customAttributes) {
+    protected T setEntityAttributes(final T entity, final Map<String, Attribute> customAttributes) {
         getCombinedAttributes(customAttributes)
-                .forEach((name, value) -> setEntityAttribute(entity, name, value));
+                .forEach((name, attribute) -> setEntityAttribute(entity, attribute));
 
         return entity;
     }
 
-    protected void setEntityAttribute(final T entity, final String attributeName, final Object attributeValue) {
+    protected void setEntityAttribute(final T entity, final Attribute attribute) {
         try {
-            setProperty(entity, attributeName, attributeValue);
+            setProperty(entity, attribute.getName(), attribute.getValue());
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new EntityFactoryException(
-                    String.format("Unable to set property %s to %s on entity of type %s", attributeName, attributeValue, entityClass), e);
+                    String.format("Unable to set property %s to %s on entity of type %s", attribute.getName(), attribute.getValue(), entityClass), e);
         }
     }
 
-    protected Map<String, Object> getCombinedAttributes(final Map<String, Object> customAttributes) {
-        Map<String, Object> combinedAttributes = new HashMap<>();
+    protected Map<String, Attribute> getCombinedAttributes(final Map<String, Attribute> customAttributes) {
+        Map<String, Attribute> combinedAttributes = new HashMap<>();
 
         combinedAttributes.putAll(defaultAttributes);
         combinedAttributes.putAll(customAttributes);
