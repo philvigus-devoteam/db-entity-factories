@@ -62,7 +62,6 @@ class AbstractBaseEntityFactoryTest {
                 )
         ).make();
 
-        assertTrue(basicEntity instanceof BasicEntity);
         assertNull(basicEntity.getId());
         assertEquals(customLongValue, basicEntity.getMyLongAttribute());
         assertEquals(customStringValue, basicEntity.getMyStringAttribute());
@@ -85,12 +84,10 @@ class AbstractBaseEntityFactoryTest {
                 )
         ).make(numberOfEntities);
 
-        assertTrue(basicEntities.get(0) instanceof BasicEntity);
         assertNull(basicEntities.get(0).getId());
         assertEquals(customLongValue, basicEntities.get(0).getMyLongAttribute());
         assertEquals(customStringValue, basicEntities.get(0).getMyStringAttribute());
 
-        assertTrue(basicEntities.get(1) instanceof BasicEntity);
         assertNull(basicEntities.get(1).getId());
         assertEquals(customLongValue, basicEntities.get(1).getMyLongAttribute());
         assertEquals(customStringValue, basicEntities.get(1).getMyStringAttribute());
@@ -145,8 +142,6 @@ class AbstractBaseEntityFactoryTest {
 
         final List<BasicEntity> savedEntities = basicEntityRepository.findAll();
 
-        assertTrue(basicEntity instanceof BasicEntity);
-        assertTrue(basicEntity.getId() instanceof Long);
         assertEquals(customLongValue, basicEntity.getMyLongAttribute());
         assertEquals(customStringValue, basicEntity.getMyStringAttribute());
 
@@ -175,13 +170,9 @@ class AbstractBaseEntityFactoryTest {
 
         assertEquals(numberOfEntities, basicEntities.size());
 
-        assertTrue(basicEntities.get(0) instanceof BasicEntity);
-        assertTrue(basicEntities.get(0).getId() instanceof Long);
         assertEquals(customLongValue, basicEntities.get(0).getMyLongAttribute());
         assertEquals(customStringValue, basicEntities.get(0).getMyStringAttribute());
 
-        assertTrue(basicEntities.get(1) instanceof BasicEntity);
-        assertTrue(basicEntities.get(1).getId() instanceof Long);
         assertEquals(999L, basicEntities.get(1).getMyLongAttribute());
         assertEquals(customStringValue, basicEntities.get(1).getMyStringAttribute());
 
@@ -196,14 +187,12 @@ class AbstractBaseEntityFactoryTest {
     }
 
     void assertBasicEntityCorrectlyMadeWithDefaultAttributes(final BasicEntity basicEntity) {
-        assertTrue(basicEntity instanceof BasicEntity);
         assertNull(basicEntity.getId());
         assertTrue(basicEntity.getMyLongAttribute() instanceof Long);
         assertTrue(basicEntity.getMyStringAttribute() instanceof String);
     }
 
     void assertBasicEntityCorrectlyCreatedWithDefaultAttributes(final BasicEntity basicEntity) {
-        assertTrue(basicEntity instanceof BasicEntity);
         assertTrue(basicEntity.getId() instanceof Long);
         assertTrue(basicEntity.getMyLongAttribute() instanceof Long);
         assertTrue(basicEntity.getMyStringAttribute() instanceof String);
