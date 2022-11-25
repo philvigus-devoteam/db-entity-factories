@@ -23,7 +23,6 @@ public abstract class AbstractBaseEntityFactory<T> {
     protected final JpaRepository<T, Long> repository;
 
     protected Map<String, Object> customAttributes;
-
     protected Map<String, Object> defaultAttributes;
 
     protected AbstractBaseEntityFactory(final Class<T> entityClass, final JpaRepository<T, Long> repository) {
@@ -109,7 +108,7 @@ public abstract class AbstractBaseEntityFactory<T> {
 
     protected Map<String, Object> getCombinedAttributes(final Map<String, Object> customAttributes) {
         Map<String, Object> combinedAttributes = new HashMap<>();
-        
+
         combinedAttributes.putAll(defaultAttributes);
         combinedAttributes.putAll(customAttributes);
 
