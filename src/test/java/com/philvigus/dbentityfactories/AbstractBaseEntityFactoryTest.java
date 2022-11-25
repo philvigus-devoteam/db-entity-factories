@@ -49,11 +49,17 @@ class AbstractBaseEntityFactoryTest {
 
     @Test
     void makeCanReturnASingleBasicEntityWithCustomAttributesSet() {
+        final String customLongName = "myLongAttribute";
         final Long customLongValue = 999L;
+
+        final String customStringName = "myStringAttribute";
         final String customStringValue = "a custom string value";
 
         final BasicEntity basicEntity = basicEntityFactory.withAttributes(
-                Map.of("myLongAttribute", customLongValue, "myStringAttribute", customStringValue)
+                Map.of(
+                        "myLongAttribute", new Attribute(customLongName, customLongValue),
+                        "myStringAttribute", new Attribute(customStringName, customStringValue)
+                )
         ).make();
 
         assertTrue(basicEntity instanceof BasicEntity);
@@ -65,11 +71,18 @@ class AbstractBaseEntityFactoryTest {
     @Test
     void makeCanReturnMultipleBasicEntitiesWithCustomAttributesSet() {
         final int numberOfEntities = 2;
+
+        final String customLongName = "myLongAttribute";
         final Long customLongValue = 999L;
+
+        final String customStringName = "myStringAttribute";
         final String customStringValue = "a custom string value";
 
         final List<BasicEntity> basicEntities = basicEntityFactory.withAttributes(
-                Map.of("myLongAttribute", customLongValue, "myStringAttribute", customStringValue)
+                Map.of(
+                        "myLongAttribute", new Attribute(customLongName, customLongValue),
+                        "myStringAttribute", new Attribute(customStringName, customStringValue)
+                )
         ).make(numberOfEntities);
 
         assertTrue(basicEntities.get(0) instanceof BasicEntity);
@@ -117,11 +130,17 @@ class AbstractBaseEntityFactoryTest {
 
     @Test
     void createCanReturnAndSaveASingleBasicEntityWithCustomAttributesToTheDatabase() {
+        final String customLongName = "myLongAttribute";
         final Long customLongValue = 999L;
+
+        final String customStringName = "myStringAttribute";
         final String customStringValue = "a custom string value";
 
         final BasicEntity basicEntity = basicEntityFactory.withAttributes(
-                Map.of("myLongAttribute", customLongValue, "myStringAttribute", customStringValue)
+                Map.of(
+                        "myLongAttribute", new Attribute(customLongName, customLongValue),
+                        "myStringAttribute", new Attribute(customStringName, customStringValue)
+                )
         ).create();
 
         final List<BasicEntity> savedEntities = basicEntityRepository.findAll();
@@ -138,11 +157,18 @@ class AbstractBaseEntityFactoryTest {
     @Test
     void createCanReturnAndSaveMultipleBasicEntitiesWithCustomAttributesToTheDatabase() {
         final int numberOfEntities = 2;
+
+        final String customLongName = "myLongAttribute";
         final Long customLongValue = 999L;
+
+        final String customStringName = "myStringAttribute";
         final String customStringValue = "a custom string value";
 
         final List<BasicEntity> basicEntities = basicEntityFactory.withAttributes(
-                Map.of("myLongAttribute", customLongValue, "myStringAttribute", customStringValue)
+                Map.of(
+                        "myLongAttribute", new Attribute(customLongName, customLongValue),
+                        "myStringAttribute", new Attribute(customStringName, customStringValue)
+                )
         ).create(numberOfEntities);
 
         final List<BasicEntity> savedEntities = basicEntityRepository.findAll();
