@@ -11,9 +11,9 @@ public class BasicEntityFactory extends AbstractBaseEntityFactory<BasicEntity> {
     public BasicEntityFactory(final JpaRepository<BasicEntity, Long> repository) {
         super(BasicEntity.class, repository);
 
-        defaultAttributes.put("myLongAttribute", new Attribute("myLongAttribute",
+        defaultAttributes.put("myLongAttribute", new Attribute<>("myLongAttribute",
                 faker.number().numberBetween(1L, 5L)));
 
-        defaultAttributes.put("myStringAttribute", new Attribute("myStringAttribute", faker.lorem().sentence()));
+        defaultAttributes.put("myStringAttribute", new Attribute<>("myStringAttribute", faker.lorem().sentence()));
     }
 }

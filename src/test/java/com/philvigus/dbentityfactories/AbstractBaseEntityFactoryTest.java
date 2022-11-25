@@ -57,8 +57,8 @@ class AbstractBaseEntityFactoryTest {
 
         final BasicEntity basicEntity = basicEntityFactory.withAttributes(
                 Map.of(
-                        "myLongAttribute", new Attribute(customLongName, customLongValue),
-                        "myStringAttribute", new Attribute(customStringName, customStringValue)
+                        "myLongAttribute", new Attribute<>(customLongName, customLongValue),
+                        "myStringAttribute", new Attribute<>(customStringName, customStringValue)
                 )
         ).make();
 
@@ -79,8 +79,8 @@ class AbstractBaseEntityFactoryTest {
 
         final List<BasicEntity> basicEntities = basicEntityFactory.withAttributes(
                 Map.of(
-                        "myLongAttribute", new Attribute(customLongName, customLongValue),
-                        "myStringAttribute", new Attribute(customStringName, customStringValue)
+                        "myLongAttribute", new Attribute<>(customLongName, customLongValue),
+                        "myStringAttribute", new Attribute<>(customStringName, customStringValue)
                 )
         ).make(numberOfEntities);
 
@@ -135,8 +135,8 @@ class AbstractBaseEntityFactoryTest {
 
         final BasicEntity basicEntity = basicEntityFactory.withAttributes(
                 Map.of(
-                        "myLongAttribute", new Attribute(customLongName, customLongValue),
-                        "myStringAttribute", new Attribute(customStringName, customStringValue)
+                        "myLongAttribute", new Attribute<>(customLongName, customLongValue),
+                        "myStringAttribute", new Attribute<>(customStringName, customStringValue)
                 )
         ).create();
 
@@ -161,8 +161,8 @@ class AbstractBaseEntityFactoryTest {
 
         final List<BasicEntity> basicEntities = basicEntityFactory.withAttributes(
                 Map.of(
-                        "myLongAttribute", new Attribute(customLongName, customLongValue),
-                        "myStringAttribute", new Attribute(customStringName, customStringValue)
+                        "myLongAttribute", new Attribute<>(customLongName, customLongValue),
+                        "myStringAttribute", new Attribute<>(customStringName, customStringValue)
                 )
         ).create(numberOfEntities);
 
