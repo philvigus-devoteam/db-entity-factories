@@ -5,30 +5,22 @@ import lombok.Getter;
 import java.util.function.Supplier;
 
 @Getter
-public class DefaultAttribute<T> implements Attribute<T> {
+public class CustomAttribute<T> implements Attribute<T> {
     private final String name;
     private final Supplier<T> valueSupplier;
 
-    private final boolean isUnique;
-
-    public DefaultAttribute(String name, Supplier<T> valueSupplier, boolean isUnique) {
+    public CustomAttribute(String name, Supplier<T> valueSupplier) {
         if (name.isEmpty()) {
             throw new IllegalArgumentException("Default attribute name must not be empty");
         }
 
         this.name = name;
         this.valueSupplier = valueSupplier;
-        this.isUnique = isUnique;
-    }
-
-    public DefaultAttribute(String name, Supplier<T> valueSupplier) {
-        this(name, valueSupplier, false);
     }
 
     public String getName() {
         return name;
     }
-
 
     public T getValue() {
         return valueSupplier.get();
