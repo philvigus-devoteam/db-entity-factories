@@ -1,6 +1,6 @@
 package com.philvigus.dbentityfactories;
 
-import com.philvigus.dbentityfactories.attributes.Attribute;
+import com.philvigus.dbentityfactories.attributes.AbstractBaseAttribute;
 import com.philvigus.dbentityfactories.attributes.CustomAttribute;
 import com.philvigus.dbentityfactories.attributes.DefaultAttribute;
 import com.philvigus.dbentityfactories.exceptions.EntityFactoryException;
@@ -94,7 +94,7 @@ public abstract class AbstractBaseEntityFactory<T> {
 
     protected T setEntityAttributes(final T entity, final Map<String, CustomAttribute<?>> customAttributes) {
 
-        ConcurrentHashMap<String, Attribute<?>> combinedAttributes = new ConcurrentHashMap<>(defaultAttributes);
+        ConcurrentHashMap<String, AbstractBaseAttribute<?>> combinedAttributes = new ConcurrentHashMap<>(defaultAttributes);
         combinedAttributes.putAll(customAttributes);
 
         combinedAttributes.forEach((name, attribute) -> setEntityAttribute(entity, attribute));
@@ -102,7 +102,7 @@ public abstract class AbstractBaseEntityFactory<T> {
         return entity;
     }
 
-    protected void setEntityAttribute(final T entity, Attribute<?> attribute) {
+    protected void setEntityAttribute(final T entity, AbstractBaseAttribute<?> attribute) {
         try {
             setProperty(entity, attribute.getName(), attribute.getValue());
         } catch (IllegalAccessException | InvocationTargetException e) {

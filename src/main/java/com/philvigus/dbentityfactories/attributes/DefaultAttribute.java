@@ -5,19 +5,12 @@ import lombok.Getter;
 import java.util.function.Supplier;
 
 @Getter
-public class DefaultAttribute<T> implements Attribute<T> {
-    private final String name;
-    private final Supplier<T> valueSupplier;
-
+public class DefaultAttribute<T> extends AbstractBaseAttribute<T> {
     private final boolean isUnique;
 
     public DefaultAttribute(String name, Supplier<T> valueSupplier, boolean isUnique) {
-        if (name.isEmpty()) {
-            throw new IllegalArgumentException("Default attribute name must not be empty");
-        }
+        super(name, valueSupplier);
 
-        this.name = name;
-        this.valueSupplier = valueSupplier;
         this.isUnique = isUnique;
     }
 
@@ -25,12 +18,7 @@ public class DefaultAttribute<T> implements Attribute<T> {
         this(name, valueSupplier, false);
     }
 
-    public String getName() {
-        return name;
-    }
-
-
-    public T getValue() {
-        return valueSupplier.get();
+    public boolean isUnique() {
+        return isUnique;
     }
 }
