@@ -9,7 +9,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.IntStream;
 
@@ -25,15 +27,12 @@ public abstract class AbstractBaseEntityFactory<T> {
     protected Map<String, CustomAttribute<?>> customAttributes;
     protected Map<String, DefaultAttribute<?>> defaultAttributes;
 
-    protected Map<String, Set<Object>> usedUniqueAttributeValues;
-
     protected AbstractBaseEntityFactory(final Class<T> entityClass, final JpaRepository<T, Long> repository) {
         this.entityClass = entityClass;
         this.faker = new Faker();
         this.repository = repository;
         this.customAttributes = new ConcurrentHashMap<>();
         this.defaultAttributes = new ConcurrentHashMap<>();
-        this.usedUniqueAttributeValues = new HashMap<>();
     }
 
     @Transactional
