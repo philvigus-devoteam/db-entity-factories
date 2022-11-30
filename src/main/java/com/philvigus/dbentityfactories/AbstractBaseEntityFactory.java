@@ -18,21 +18,21 @@ import java.util.stream.IntStream;
 import static org.apache.commons.beanutils.BeanUtils.setProperty;
 
 public abstract class AbstractBaseEntityFactory<T> {
+    protected static final Faker faker = new Faker();
     protected final Class<T> entityClass;
-
-    protected final Faker faker;
-
     protected final JpaRepository<T, Long> repository;
 
     protected Map<String, CustomAttribute<?>> customAttributes;
     protected Map<String, DefaultAttribute<?>> defaultAttributes;
 
-    protected AbstractBaseEntityFactory(final Class<T> entityClass, final JpaRepository<T, Long> repository) {
+    protected Map<String, Object> usedUniqueAttributeValues;
+
+    protected AbstractBaseEntityFactory(final Class<T> entityClass, final JpaRepository<T, Long> repository, Map<String, DefaultAttribute<?>> defaultAttributes) {
         this.entityClass = entityClass;
-        this.faker = new Faker();
         this.repository = repository;
+        this.defaultAttributes = defaultAttributes;
+        this.usedUniqueAttributeValues = new ConcurrentHashMap<>();
         this.customAttributes = new ConcurrentHashMap<>();
-        this.defaultAttributes = new ConcurrentHashMap<>();
     }
 
     @Transactional
