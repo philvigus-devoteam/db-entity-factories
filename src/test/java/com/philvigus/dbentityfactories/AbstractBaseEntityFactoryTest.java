@@ -1,5 +1,6 @@
 package com.philvigus.dbentityfactories;
 
+import com.philvigus.dbentityfactories.attributes.CustomAttribute;
 import com.philvigus.dbentityfactories.testfixtures.entities.BasicEntity;
 import com.philvigus.dbentityfactories.testfixtures.factories.BasicEntityFactory;
 import com.philvigus.dbentityfactories.testfixtures.repositories.BasicEntityRepository;
@@ -57,8 +58,8 @@ class AbstractBaseEntityFactoryTest {
 
         final BasicEntity basicEntity = basicEntityFactory.withAttributes(
                 Map.of(
-                        "myLongAttribute", new Attribute<>(customLongName, customLongValue),
-                        "myStringAttribute", new Attribute<>(customStringName, customStringValue)
+                        customLongName, new CustomAttribute<>(customLongName, () -> customLongValue),
+                        customStringName, new CustomAttribute<>(customStringName, () -> customStringValue)
                 )
         ).make();
 
@@ -79,8 +80,8 @@ class AbstractBaseEntityFactoryTest {
 
         final List<BasicEntity> basicEntities = basicEntityFactory.withAttributes(
                 Map.of(
-                        "myLongAttribute", new Attribute<>(customLongName, customLongValue),
-                        "myStringAttribute", new Attribute<>(customStringName, customStringValue)
+                        customLongName, new CustomAttribute<>(customLongName, () -> customLongValue),
+                        customStringName, new CustomAttribute<>(customStringName, () -> customStringValue)
                 )
         ).make(numberOfEntities);
 
@@ -135,8 +136,8 @@ class AbstractBaseEntityFactoryTest {
 
         final BasicEntity basicEntity = basicEntityFactory.withAttributes(
                 Map.of(
-                        "myLongAttribute", new Attribute<>(customLongName, customLongValue),
-                        "myStringAttribute", new Attribute<>(customStringName, customStringValue)
+                        customLongName, new CustomAttribute<>(customLongName, () -> customLongValue),
+                        customStringName, new CustomAttribute<>(customStringName, () -> customStringValue)
                 )
         ).create();
 
@@ -161,8 +162,8 @@ class AbstractBaseEntityFactoryTest {
 
         final List<BasicEntity> basicEntities = basicEntityFactory.withAttributes(
                 Map.of(
-                        "myLongAttribute", new Attribute<>(customLongName, customLongValue),
-                        "myStringAttribute", new Attribute<>(customStringName, customStringValue)
+                        customLongName, new CustomAttribute<>(customLongName, () -> customLongValue),
+                        customStringName, new CustomAttribute<>(customStringName, () -> customStringValue)
                 )
         ).create(numberOfEntities);
 

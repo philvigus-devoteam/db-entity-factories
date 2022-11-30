@@ -1,15 +1,15 @@
 package com.philvigus.dbentityfactories;
 
+import com.philvigus.dbentityfactories.attributes.Attribute;
+import com.philvigus.dbentityfactories.attributes.CustomAttribute;
+import com.philvigus.dbentityfactories.attributes.DefaultAttribute;
 import com.philvigus.dbentityfactories.exceptions.EntityFactoryException;
 import net.datafaker.Faker;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.IntStream;
 
@@ -22,8 +22,10 @@ public abstract class AbstractBaseEntityFactory<T> {
 
     protected final JpaRepository<T, Long> repository;
 
-    protected Map<String, Attribute> customAttributes;
-    protected Map<String, Attribute> defaultAttributes;
+    protected Map<String, CustomAttribute<?>> customAttributes;
+    protected Map<String, DefaultAttribute<?>> defaultAttributes;
+
+    protected Map<String, Set<Object>> usedUniqueAttributeValues;
 
     protected AbstractBaseEntityFactory(final Class<T> entityClass, final JpaRepository<T, Long> repository) {
         this.entityClass = entityClass;
@@ -31,6 +33,7 @@ public abstract class AbstractBaseEntityFactory<T> {
         this.repository = repository;
         this.customAttributes = new ConcurrentHashMap<>();
         this.defaultAttributes = new ConcurrentHashMap<>();
+        this.usedUniqueAttributeValues = new HashMap<>();
     }
 
     @Transactional
@@ -66,13 +69,13 @@ public abstract class AbstractBaseEntityFactory<T> {
         return getEntityWithAttributesSet(customAttributes);
     }
 
-    public AbstractBaseEntityFactory<T> withAttributes(final Map<String, Attribute> customAttributes) {
+    public AbstractBaseEntityFactory<T> withAttributes(final Map<String, CustomAttribute<?>> customAttributes) {
         this.customAttributes = customAttributes;
 
         return this;
     }
 
-    protected T getEntityWithAttributesSet(final Map<String, Attribute> customAttributes) {
+    protected T getEntityWithAttributesSet(final Map<String, CustomAttribute<?>> customAttributes) {
         final T entity = instantiateEntity();
 
         return setEntityAttributes(entity, customAttributes);
@@ -90,28 +93,22 @@ public abstract class AbstractBaseEntityFactory<T> {
         }
     }
 
-    protected T setEntityAttributes(final T entity, final Map<String, Attribute> customAttributes) {
-        getCombinedAttributes(customAttributes)
-                .forEach((name, attribute) -> setEntityAttribute(entity, attribute));
+    protected T setEntityAttributes(final T entity, final Map<String, CustomAttribute<?>> customAttributes) {
+
+        ConcurrentHashMap<String, Attribute<?>> combinedAttributes = new ConcurrentHashMap<>(defaultAttributes);
+        combinedAttributes.putAll(customAttributes);
+
+        combinedAttributes.forEach((name, attribute) -> setEntityAttribute(entity, attribute));
 
         return entity;
     }
 
-    protected void setEntityAttribute(final T entity, final Attribute attribute) {
+    protected void setEntityAttribute(final T entity, Attribute<?> attribute) {
         try {
             setProperty(entity, attribute.getName(), attribute.getValue());
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new EntityFactoryException(
                     String.format("Unable to set property %s to %s on entity of type %s", attribute.getName(), attribute.getValue(), entityClass), e);
         }
-    }
-
-    protected Map<String, Attribute> getCombinedAttributes(final Map<String, Attribute> customAttributes) {
-        Map<String, Attribute> combinedAttributes = new HashMap<>();
-
-        combinedAttributes.putAll(defaultAttributes);
-        combinedAttributes.putAll(customAttributes);
-
-        return combinedAttributes;
     }
 }
