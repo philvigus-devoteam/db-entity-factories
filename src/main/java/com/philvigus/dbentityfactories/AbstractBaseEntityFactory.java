@@ -11,7 +11,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.IntStream;
 
@@ -29,7 +28,7 @@ public abstract class AbstractBaseEntityFactory<T> {
         this.entityClass = entityClass;
         this.repository = repository;
 
-        this.sortedDefaultAttributes = new TreeMap<>(defaultAttributes);
+        this.sortedDefaultAttributes = defaultAttributes;
         this.customAttributes = new ConcurrentHashMap<>();
     }
 
