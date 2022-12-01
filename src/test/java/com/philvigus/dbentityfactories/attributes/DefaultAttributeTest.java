@@ -1,5 +1,7 @@
 package com.philvigus.dbentityfactories.attributes;
 
+import com.philvigus.dbentityfactories.exceptions.EntityFactoryException;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -16,7 +18,6 @@ class DefaultAttributeTest {
 
     @Test
     void getValueReturnsAVariableForANonConstantAttribute() throws InterruptedException {
-
         final DefaultAttribute<Long> defaultAttribute = new DefaultAttribute<>("defaultIntegerAttribute", System::currentTimeMillis);
 
         Long firstValue = defaultAttribute.getValue();
@@ -28,5 +29,23 @@ class DefaultAttributeTest {
 
         assertNotEquals(firstValue, secondValue);
 
+    }
+
+    @Test
+    void getValueThrowsAnExceptionIfTheAttributeIsUniqueAndNoUniqueValuesCanBeFound() {
+        final DefaultAttribute<Integer> defaultAttribute = new DefaultAttribute<>("defaultIntegerAttribute", () -> 5, true);
+
+        defaultAttribute.getValue();
+
+        Assertions.assertThrows(EntityFactoryException.class, defaultAttribute::getValue);
+    }
+
+    @Test
+    void getValueReturnsUniqueAttributeIsUnique() {
+        final DefaultAttribute<Integer> defaultAttribute = new DefaultAttribute<>("defaultIntegerAttribute", () -> 5, true);
+
+        defaultAttribute.getValue();
+
+        Assertions.assertThrows(EntityFactoryException.class, defaultAttribute::getValue);
     }
 }
