@@ -24,7 +24,10 @@ public abstract class AbstractBaseEntityFactory<T> {
     protected Map<String, CustomAttribute<?>> customAttributes;
     protected Map<String, DefaultAttribute<?>> sortedDefaultAttributes;
 
-    protected AbstractBaseEntityFactory(final Class<T> entityClass, final JpaRepository<T, Long> repository, final Map<String, DefaultAttribute<?>> defaultAttributes) {
+    protected AbstractBaseEntityFactory(
+            final Class<T> entityClass,
+            final JpaRepository<T, Long> repository,
+            final Map<String, DefaultAttribute<?>> defaultAttributes) {
         this.entityClass = entityClass;
         this.repository = repository;
 
@@ -90,6 +93,8 @@ public abstract class AbstractBaseEntityFactory<T> {
     }
 
     protected T setEntityAttributes(final T entity, final Map<String, CustomAttribute<?>> customAttributes) {
+        // custom attribute values are set first. We track the names of those that are set so that we don't overwrite
+        // them with default attribute values
         final List<String> customAttributesSet = new ArrayList<>();
 
         setCustomAttributesOnEntity(customAttributes, customAttributesSet, entity);
@@ -102,6 +107,8 @@ public abstract class AbstractBaseEntityFactory<T> {
         customAttributes.forEach((name, customAttribute) -> {
             Object customValue;
 
+            // if we have a default attribute with this name, and it's unique, we need to make sure the value
+            // we assign it is added to the default attribute's used values
             if (sortedDefaultAttributes.containsKey(name) && sortedDefaultAttributes.get(name).isUnique()) {
                 customValue = getUniqueCustomValue(customAttribute);
                 sortedDefaultAttributes.get(name).addUsedValue(customValue);
@@ -116,6 +123,7 @@ public abstract class AbstractBaseEntityFactory<T> {
 
     private void setDefaultAttributesOnEntity(final List<String> customAttributesSet, final T entity) {
         sortedDefaultAttributes.forEach((name, defaultAttribute) -> {
+            // If we've already set this attribute with a custom value, we don't want to overwrite it
             if (!customAttributesSet.contains(name)) {
                 setEntityAttribute(entity, name, defaultAttribute.getValue());
             }
@@ -136,6 +144,7 @@ public abstract class AbstractBaseEntityFactory<T> {
         Object customValue;
 
         do {
+            // bail out and throw an error after a set number of attempts to find a unique value
             if (attempts == DefaultAttribute.MAX_UNIQUE_ATTEMPTS) {
                 throw new EntityFactoryException(String.format(
                         "Unable to find unique value for attribute %s after %s attempts",
