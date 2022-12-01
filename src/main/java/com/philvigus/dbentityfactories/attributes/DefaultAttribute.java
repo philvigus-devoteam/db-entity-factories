@@ -15,18 +15,18 @@ public class DefaultAttribute<T> extends AbstractBaseAttribute<T> {
 
     private final Set<T> usedValues;
 
-    public DefaultAttribute(String name, Supplier<T> valueSupplier, boolean isUnique) {
+    public DefaultAttribute(final String name, final Supplier<T> valueSupplier, final boolean isUnique) {
         super(name, valueSupplier);
 
         this.isUnique = isUnique;
         this.usedValues = new HashSet<>();
     }
 
-    public DefaultAttribute(String name, Supplier<T> valueSupplier) {
+    public DefaultAttribute(final String name, final Supplier<T> valueSupplier) {
         this(name, valueSupplier, false);
     }
 
-    public boolean hasUsedValue(Object value) {
+    public boolean hasUsedValue(final Object value) {
         try {
             return usedValues.contains(value);
         } catch (ClassCastException e) {
@@ -34,7 +34,7 @@ public class DefaultAttribute<T> extends AbstractBaseAttribute<T> {
         }
     }
 
-    public void addUsedValue(Object value) {
+    public void addUsedValue(final Object value) {
         try {
             usedValues.add((T) value);
         } catch (ClassCastException e) {

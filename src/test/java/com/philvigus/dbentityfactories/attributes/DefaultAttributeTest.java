@@ -20,12 +20,12 @@ class DefaultAttributeTest {
     void getValueReturnsAVariableForANonConstantAttribute() throws InterruptedException {
         final DefaultAttribute<Long> defaultAttribute = new DefaultAttribute<>("defaultIntegerAttribute", System::currentTimeMillis);
 
-        Long firstValue = defaultAttribute.getValue();
+        final Long firstValue = defaultAttribute.getValue();
 
         // TODO: replace this with something less brittle
         Thread.sleep(100);
 
-        Long secondValue = defaultAttribute.getValue();
+        final Long secondValue = defaultAttribute.getValue();
 
         assertNotEquals(firstValue, secondValue);
 

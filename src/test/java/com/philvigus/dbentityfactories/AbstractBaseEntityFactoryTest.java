@@ -7,7 +7,6 @@ import com.philvigus.dbentityfactories.testfixtures.factories.BasicEntityFactory
 import com.philvigus.dbentityfactories.testfixtures.factories.EntityWithUniqueAttributesFactory;
 import com.philvigus.dbentityfactories.testfixtures.repositories.BasicEntityRepository;
 import com.philvigus.dbentityfactories.testfixtures.repositories.EntityWithUniqueAttributesRepository;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,7 +102,7 @@ class AbstractBaseEntityFactoryTest {
 
     @Test
     void makeThrowsAnExceptionIfCopiesIsLessThanOne() {
-        Assertions.assertThrows(IllegalArgumentException.class, () -> basicEntityFactory.make(0));
+        assertThrows(IllegalArgumentException.class, () -> basicEntityFactory.make(0));
     }
 
     @Test
@@ -191,7 +190,7 @@ class AbstractBaseEntityFactoryTest {
 
     @Test
     void createThrowsAnExceptionIfCopiesIsLessThanOne() {
-        Assertions.assertThrows(IllegalArgumentException.class, () -> basicEntityFactory.create(0));
+        assertThrows(IllegalArgumentException.class, () -> basicEntityFactory.create(0));
     }
 
     @Test
@@ -216,8 +215,9 @@ class AbstractBaseEntityFactoryTest {
                 .withAttributes(
                         Map.of(
                                 "uniqueString", new CustomAttribute<>("uniqueString", () -> {
-                                    List<String> list = Arrays.asList("bob", "eric", "steve");
-                                    Random rand = new Random();
+                                    final List<String> list = Arrays.asList("bob", "eric", "steve");
+                                    final Random rand = new Random();
+
                                     return list.get(rand.nextInt(list.size()));
                                 })
                         )

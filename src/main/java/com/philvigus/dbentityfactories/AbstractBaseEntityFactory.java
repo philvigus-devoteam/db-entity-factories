@@ -24,7 +24,7 @@ public abstract class AbstractBaseEntityFactory<T> {
     protected Map<String, CustomAttribute<?>> customAttributes;
     protected Map<String, DefaultAttribute<?>> sortedDefaultAttributes;
 
-    protected AbstractBaseEntityFactory(final Class<T> entityClass, final JpaRepository<T, Long> repository, Map<String, DefaultAttribute<?>> defaultAttributes) {
+    protected AbstractBaseEntityFactory(final Class<T> entityClass, final JpaRepository<T, Long> repository, final Map<String, DefaultAttribute<?>> defaultAttributes) {
         this.entityClass = entityClass;
         this.repository = repository;
 
@@ -122,7 +122,7 @@ public abstract class AbstractBaseEntityFactory<T> {
         });
     }
 
-    protected void setEntityAttribute(final T entity, String name, Object value) {
+    protected void setEntityAttribute(final T entity, final String name, final Object value) {
         try {
             setProperty(entity, name, value);
         } catch (IllegalAccessException | InvocationTargetException e) {
@@ -131,7 +131,7 @@ public abstract class AbstractBaseEntityFactory<T> {
         }
     }
 
-    private Object getUniqueCustomValue(CustomAttribute<?> customAttribute) {
+    private Object getUniqueCustomValue(final CustomAttribute<?> customAttribute) {
         int attempts = 0;
         Object customValue;
 
