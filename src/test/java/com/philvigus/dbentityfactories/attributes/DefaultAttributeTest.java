@@ -4,6 +4,8 @@ import com.philvigus.dbentityfactories.exceptions.EntityFactoryException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.UUID;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
@@ -18,17 +20,12 @@ class DefaultAttributeTest {
 
     @Test
     void getValueReturnsAVariableForANonConstantAttribute() throws InterruptedException {
-        final DefaultAttribute<Long> defaultAttribute = new DefaultAttribute<>("defaultIntegerAttribute", System::currentTimeMillis);
+        final DefaultAttribute<UUID> defaultAttribute = new DefaultAttribute<>("defaultIntegerAttribute", UUID::randomUUID);
 
-        final Long firstValue = defaultAttribute.getValue();
-
-        // TODO: replace this with something less brittle
-        Thread.sleep(100);
-
-        final Long secondValue = defaultAttribute.getValue();
+        final UUID firstValue = defaultAttribute.getValue();
+        final UUID secondValue = defaultAttribute.getValue();
 
         assertNotEquals(firstValue, secondValue);
-
     }
 
     @Test
