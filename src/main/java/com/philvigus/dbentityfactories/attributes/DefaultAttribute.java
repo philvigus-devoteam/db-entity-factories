@@ -28,7 +28,7 @@ public class DefaultAttribute<T> extends AbstractBaseAttribute<T> {
 
     public boolean hasUsedValue(final Object value) {
         try {
-            return usedValues.contains(value);
+            return usedValues.contains((T) value);
         } catch (ClassCastException e) {
             throw new EntityFactoryException("Unable to check whether value is used as it is of the wrong type", e);
         }
@@ -56,6 +56,7 @@ public class DefaultAttribute<T> extends AbstractBaseAttribute<T> {
         int attempts = 0;
 
         do {
+            // bail out and throw an error after a set number of attempts to find a unique value
             if (attempts == DefaultAttribute.MAX_UNIQUE_ATTEMPTS) {
                 throw new EntityFactoryException(String.format(
                         "Unable to find unique value for attribute %s after %s attempts",
