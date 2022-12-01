@@ -6,7 +6,7 @@ import java.util.function.Supplier;
 
 @Getter
 public class CustomAttribute<T> extends AbstractBaseAttribute<T> {
-    public CustomAttribute(String name, Supplier<T> valueSupplier) {
+    public CustomAttribute(final String name, final Supplier<T> valueSupplier) {
         super(name, valueSupplier);
     }
 }
