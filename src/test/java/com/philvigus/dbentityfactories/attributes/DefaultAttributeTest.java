@@ -14,8 +14,11 @@ class DefaultAttributeTest {
     void getValueReturnsAConstantForAConstantAttribute() {
         final DefaultAttribute<Integer> defaultAttribute = new DefaultAttribute<>("defaultIntegerAttribute", () -> 5);
 
-        assertEquals(5, defaultAttribute.getValue());
-        assertEquals(5, defaultAttribute.getValue());
+        final Integer firstValue = defaultAttribute.getValue();
+        final Integer secondValue = defaultAttribute.getValue();
+
+        assertEquals(firstValue, secondValue);
+
     }
 
     @Test
