@@ -2,32 +2,39 @@ package com.philvigus.dbentityfactories;
 
 import com.philvigus.dbentityfactories.attributes.CustomAttribute;
 import com.philvigus.dbentityfactories.testfixtures.entities.BasicEntity;
+import com.philvigus.dbentityfactories.testfixtures.entities.EntityWithUniqueAttributes;
 import com.philvigus.dbentityfactories.testfixtures.factories.BasicEntityFactory;
+import com.philvigus.dbentityfactories.testfixtures.factories.EntityWithUniqueAttributesFactory;
 import com.philvigus.dbentityfactories.testfixtures.repositories.BasicEntityRepository;
+import com.philvigus.dbentityfactories.testfixtures.repositories.EntityWithUniqueAttributesRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@ExtendWith(MockitoExtension.class)
 @DataJpaTest
 class AbstractBaseEntityFactoryTest {
     BasicEntityFactory basicEntityFactory;
+    EntityWithUniqueAttributesFactory entityWithUniqueAttributesFactory;
 
     @Autowired
     BasicEntityRepository basicEntityRepository;
 
+    @Autowired
+    EntityWithUniqueAttributesRepository entityWithUniqueAttributesRepository;
+
     @BeforeEach
     void setUp() {
         basicEntityFactory = new BasicEntityFactory(basicEntityRepository);
+        entityWithUniqueAttributesFactory = new EntityWithUniqueAttributesFactory(entityWithUniqueAttributesRepository);
     }
 
     @Test
@@ -185,6 +192,44 @@ class AbstractBaseEntityFactoryTest {
     @Test
     void createThrowsAnExceptionIfCopiesIsLessThanOne() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> basicEntityFactory.create(0));
+    }
+
+    @Test
+    void factoriesCanCreateMultipleEntitiesWithUniqueDefaultAttributesCorrectly() {
+        final int numberOfEntities = 3;
+
+        final List<EntityWithUniqueAttributes> createdEntities = entityWithUniqueAttributesFactory.create(numberOfEntities);
+        final List<EntityWithUniqueAttributes> savedEntities = entityWithUniqueAttributesRepository.findAll();
+
+        assertEquals(numberOfEntities, createdEntities.size());
+        assertEquals(numberOfEntities, savedEntities.size());
+        assertNotEquals(savedEntities.get(0).getUniqueString(), savedEntities.get(1).getUniqueString());
+        assertNotEquals(savedEntities.get(0).getUniqueString(), savedEntities.get(1).getUniqueString());
+        assertNotEquals(savedEntities.get(1).getUniqueString(), savedEntities.get(2).getUniqueString());
+    }
+
+    @Test
+    void factoriesCanCreateMultipleEntitiesWithUniqueCustomAttributesCorrectly() {
+        final int numberOfEntities = 3;
+
+        final List<EntityWithUniqueAttributes> createdEntities = entityWithUniqueAttributesFactory
+                .withAttributes(
+                        Map.of(
+                                "uniqueString", new CustomAttribute<>("uniqueString", () -> {
+                                    List<String> list = Arrays.asList("bob", "eric", "steve");
+                                    Random rand = new Random();
+                                    return list.get(rand.nextInt(list.size()));
+                                })
+                        )
+                )
+                .create(numberOfEntities);
+        final List<EntityWithUniqueAttributes> savedEntities = entityWithUniqueAttributesRepository.findAll();
+
+        assertEquals(numberOfEntities, createdEntities.size());
+        assertEquals(numberOfEntities, savedEntities.size());
+        assertNotEquals(savedEntities.get(0).getUniqueString(), savedEntities.get(1).getUniqueString());
+        assertNotEquals(savedEntities.get(0).getUniqueString(), savedEntities.get(1).getUniqueString());
+        assertNotEquals(savedEntities.get(1).getUniqueString(), savedEntities.get(2).getUniqueString());
     }
 
     void assertBasicEntityCorrectlyMadeWithDefaultAttributes(final BasicEntity basicEntity) {

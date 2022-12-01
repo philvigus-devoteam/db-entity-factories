@@ -3,8 +3,8 @@ package com.philvigus.dbentityfactories.attributes;
 import java.util.function.Supplier;
 
 public abstract class AbstractBaseAttribute<T> {
+    protected final Supplier<T> valueSupplier;
     private final String name;
-    private final Supplier<T> valueSupplier;
 
     protected AbstractBaseAttribute(String name, Supplier<T> valueSupplier) {
         if (name.isEmpty()) {
