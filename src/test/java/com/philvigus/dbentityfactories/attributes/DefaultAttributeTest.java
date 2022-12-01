@@ -19,7 +19,7 @@ class DefaultAttributeTest {
     }
 
     @Test
-    void getValueReturnsAVariableForANonConstantAttribute() throws InterruptedException {
+    void getValueReturnsDifferentValuesWhenUsedMultipleTimesForANonConstantAttribute() throws InterruptedException {
         final DefaultAttribute<UUID> defaultAttribute = new DefaultAttribute<>("defaultIntegerAttribute", UUID::randomUUID);
 
         final UUID firstValue = defaultAttribute.getValue();
