@@ -91,41 +91,36 @@ public abstract class AbstractBaseEntityFactory<T> {
     }
 
     protected T setEntityAttributes(final T entity, final Map<String, CustomAttribute<?>> customAttributes) {
-        final List<String> attributesSet = new ArrayList<>();
+        final List<String> customAttributesSet = new ArrayList<>();
 
+        setCustomAttributesOnEntity(customAttributes, customAttributesSet, entity);
+        setDefaultAttributesOnEntity(customAttributesSet, entity);
+
+        return entity;
+    }
+
+    private void setCustomAttributesOnEntity(final Map<String, CustomAttribute<?>> customAttributes, final List<String> customAttributesSet, final T entity) {
         customAttributes.forEach((name, customAttribute) -> {
-            Object customValue = customAttribute.getValue();
+            Object customValue;
 
             if (sortedDefaultAttributes.containsKey(name) && sortedDefaultAttributes.get(name).isUnique()) {
-                int attempts = 1;
-
-                while (sortedDefaultAttributes.get(name).hasUsedValue(customValue)) {
-                    if (attempts == DefaultAttribute.MAX_UNIQUE_ATTEMPTS) {
-                        throw new EntityFactoryException(String.format(
-                                "Unable to find unique value for attribute %s after %s attempts",
-                                customAttribute.getName(),
-                                DefaultAttribute.MAX_UNIQUE_ATTEMPTS)
-                        );
-                    }
-
-                    customValue = customAttribute.getValue();
-                    attempts++;
-                }
-                
+                customValue = getUniqueCustomValue(customAttribute);
                 sortedDefaultAttributes.get(name).addUsedValue(customValue);
+            } else {
+                customValue = customAttribute.getValue();
             }
 
             setEntityAttribute(entity, name, customValue);
-            attributesSet.add(customAttribute.getName());
+            customAttributesSet.add(name);
         });
+    }
 
+    private void setDefaultAttributesOnEntity(final List<String> customAttributesSet, final T entity) {
         sortedDefaultAttributes.forEach((name, defaultAttribute) -> {
-            if (!attributesSet.contains(name)) {
+            if (!customAttributesSet.contains(name)) {
                 setEntityAttribute(entity, name, defaultAttribute.getValue());
             }
         });
-
-        return entity;
     }
 
     protected void setEntityAttribute(final T entity, String name, Object value) {
@@ -135,5 +130,25 @@ public abstract class AbstractBaseEntityFactory<T> {
             throw new EntityFactoryException(
                     String.format("Unable to set property %s to %s on entity of type %s", name, value, entityClass), e);
         }
+    }
+
+    private Object getUniqueCustomValue(CustomAttribute<?> customAttribute) {
+        int attempts = 0;
+        Object customValue;
+
+        do {
+            if (attempts == DefaultAttribute.MAX_UNIQUE_ATTEMPTS) {
+                throw new EntityFactoryException(String.format(
+                        "Unable to find unique value for attribute %s after %s attempts",
+                        customAttribute.getName(),
+                        DefaultAttribute.MAX_UNIQUE_ATTEMPTS)
+                );
+            }
+
+            customValue = customAttribute.getValue();
+            attempts++;
+        } while (sortedDefaultAttributes.get(customAttribute.getName()).hasUsedValue(customValue));
+
+        return customValue;
     }
 }
