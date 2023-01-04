@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -22,4 +23,24 @@ public class EntityWithUniqueAttributes {
     private String repeatableString;
 
     private Long repeatableLong;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        EntityWithUniqueAttributes that = (EntityWithUniqueAttributes) o;
+
+        return Objects.equals(that.getId(), this.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, uniqueString, uniqueLong, repeatableString, repeatableLong);
+    }
 }

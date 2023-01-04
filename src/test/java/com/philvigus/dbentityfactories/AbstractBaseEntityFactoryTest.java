@@ -14,7 +14,10 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -114,7 +117,7 @@ class AbstractBaseEntityFactoryTest {
         assertBasicEntityCorrectlyCreatedWithDefaultAttributes(basicEntity);
 
         assertEquals(1, savedEntities.size());
-        assertTrue(savedEntities.stream().anyMatch(o -> Objects.equals(o.getId(), basicEntity.getId())));
+        assertTrue(savedEntities.contains(basicEntity));
     }
 
     @Test
@@ -129,8 +132,8 @@ class AbstractBaseEntityFactoryTest {
         assertBasicEntityCorrectlyCreatedWithDefaultAttributes(basicEntities.get(1));
 
         assertEquals(numberOfEntities, savedEntities.size());
-        assertTrue(savedEntities.stream().anyMatch(o -> Objects.equals(o.getId(), basicEntities.get(0).getId())));
-        assertTrue(savedEntities.stream().anyMatch(o -> Objects.equals(o.getId(), basicEntities.get(1).getId())));
+        assertTrue(savedEntities.contains(basicEntities.get(0)));
+        assertTrue(savedEntities.contains(basicEntities.get(1)));
     }
 
     @Test
@@ -154,7 +157,7 @@ class AbstractBaseEntityFactoryTest {
         assertEquals(customStringValue, basicEntity.getMyStringAttribute());
 
         assertEquals(1, savedEntities.size());
-        assertTrue(savedEntities.stream().anyMatch(o -> Objects.equals(o.getId(), basicEntity.getId())));
+        assertTrue(savedEntities.contains(basicEntity));
     }
 
     @Test
@@ -185,8 +188,8 @@ class AbstractBaseEntityFactoryTest {
         assertEquals(customStringValue, basicEntities.get(1).getMyStringAttribute());
 
         assertEquals(numberOfEntities, savedEntities.size());
-        assertTrue(savedEntities.stream().anyMatch(o -> Objects.equals(o.getId(), basicEntities.get(0).getId())));
-        assertTrue(savedEntities.stream().anyMatch(o -> Objects.equals(o.getId(), basicEntities.get(1).getId())));
+        assertTrue(savedEntities.contains(basicEntities.get(0)));
+        assertTrue(savedEntities.contains(basicEntities.get(1)));
     }
 
     @Test
