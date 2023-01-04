@@ -1,5 +1,6 @@
 package com.philvigus.dbentityfactories.testfixtures.repositories;
 
+import com.philvigus.dbentityfactories.testfixtures.entities.ChildEntity;
 import com.philvigus.dbentityfactories.testfixtures.entities.ParentEntity;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,6 +19,9 @@ class ParentEntityRepositoryTest {
     @Autowired
     ParentEntityRepository parentEntityRepository;
 
+    @Autowired
+    ChildEntityRepository childEntityRepository;
+
     @Test
     void saveShouldSaveTheEntityToTheDatabase() {
         final ParentEntity parentEntity = new ParentEntity();
@@ -28,5 +32,24 @@ class ParentEntityRepositoryTest {
 
         assertEquals(1, savedEntities.size());
         assertTrue(savedEntities.contains(parentEntity));
+    }
+
+    @Test
+    void saveShouldSaveTheParentEntitysChildrenIfItHasThem() {
+        final ParentEntity parentEntity = new ParentEntity();
+
+        final ChildEntity firstChild = new ChildEntity();
+        final ChildEntity secondChild = new ChildEntity();
+
+        parentEntity.addChild(firstChild);
+        parentEntity.addChild(secondChild);
+
+        parentEntityRepository.save(parentEntity);
+
+        final List<ChildEntity> savedChildEntities = childEntityRepository.findAll();
+
+        assertEquals(2, savedChildEntities.size());
+        assertTrue(savedChildEntities.contains(firstChild));
+        assertTrue(savedChildEntities.contains(secondChild));
     }
 }
