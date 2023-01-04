@@ -4,24 +4,122 @@ This library allows you to easily create and persist large numbers of entities w
 also allows you to override these properties if you require an attribute to be set to a specific value or generally have
 a different set of creation rules.
 
-## Static/Singleton factories
+## Simple Entities
 
-- need to extend @Component to create an @EntityFactory annotation so that factories are managed as beans. This means
-  they will automatically be created as singletons without having to do anything else.
+For a simple entity with no relationships:
 
-## One to many relations/one to one relationships
+```java
+public class BasicEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-Parent entity
+    private Long myLongAttribute;
 
-- Collection of children, nullable or not nullable
+    private String myStringAttribute;
 
-Parent repository
-Parent factory
+    // ...Getters, Setters
+}
+```
 
-- Do we need to check the type of the attribute to make sure it is a collection?
+You define a factory as follows:
 
-Child entity
-Child repository
-Child factory
+```java
+@EntityFactory
+public class BasicEntityFactory extends AbstractBaseEntityFactory<BasicEntity> {
+    public BasicEntityFactory(final JpaRepository<BasicEntity, Long> repository) {
+        super(BasicEntity.class, repository, Map.of(
+                "myLongAttribute", new DefaultAttribute<>("myLongAttribute", () -> AbstractBaseEntityFactory.faker.number().numberBetween(1L, 5L)),
+                "myStringAttribute", new DefaultAttribute<>("myStringAttribute", () -> AbstractBaseEntityFactory.faker.lorem().sentence())
+        ));
+    }
+}
+```
 
+Entities can then be made with attributes based on the generators specified in the factory:
 
+```java
+public class EntityCreator {
+    @Autowired
+    BasicEntityFactory basicEntityFactory;
+
+    public void CreateEntities() {
+        // create and persist 5 entities to the database
+        List<BasicEntity> savedEntities = basicEntityFactory.create(5);
+
+        // create but don't persist them
+        List<BasicEntity> createdEntities = basicEntityFactory.make(5);
+    }
+}
+```
+
+## Overriding Default Attributes
+```java
+public class EntityCreator {
+    @Autowired
+    BasicEntityFactory basicEntityFactory;
+
+    public void CreateEntities() {
+        // customLongName and customStringName will be set to 12 and "A custom string value"
+        // for all created entities
+        List<BasicEntity> basicEntity = basicEntityFactory.withAttributes(
+            Map.of(
+                customLongName, new CustomAttribute<>(customLongName, () -> 12L),
+                customStringName, new CustomAttribute<>(customStringName, () -> "A custom string value")
+            )
+        ).create(5);
+
+    }
+}
+```
+## Unique Attributes
+```java
+@EntityFactory
+public class BasicEntityFactory extends AbstractBaseEntityFactory<BasicEntity> {
+    public BasicEntityFactory(final JpaRepository<BasicEntity, Long> repository) {
+        super(BasicEntity.class, repository, Map.of(
+                // All myLongAttribute values are guaranteed to be unique
+                "myLongAttribute", new DefaultAttribute<>("myLongAttribute", () -> AbstractBaseEntityFactory.faker.number().numberBetween(1L, 5L), true),
+                "myStringAttribute", new DefaultAttribute<>("myStringAttribute", () -> AbstractBaseEntityFactory.faker.lorem().sentence())
+        ));
+    }
+}
+```
+A set number of attempts will be made to generate each unique value, after which it will throw an exception.
+## Parent-child relationships
+```java
+public class ParentEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<ChildEntity> children = new ArrayList<>();
+
+    public void addChild(ChildEntity childEntity) {
+        this.children.add(childEntity);
+
+        childEntity.setParent(this);
+    }
+}
+
+public class ChildEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "parent_id")
+    private ParentEntity parent;
+}
+
+@EntityFactory
+@DependsOn("parentEntityFactory")
+public class ChildEntityFactory extends AbstractBaseEntityFactory<ChildEntity> {
+    @Autowired
+    public ChildEntityFactory(final JpaRepository<ChildEntity, Long> repository, ParentEntityFactory parentEntityFactory) {
+        // will automatically create and save the parent entity as well
+        super(ChildEntity.class, repository, Map.of("parent", new DefaultAttribute<>("parent", parentEntityFactory::create)));
+    }
+}
+```
