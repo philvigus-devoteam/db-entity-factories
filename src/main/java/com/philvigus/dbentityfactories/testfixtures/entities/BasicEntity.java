@@ -30,10 +30,12 @@ public class BasicEntity {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        
+
         BasicEntity that = (BasicEntity) o;
 
-        return Objects.equals(that.getId(), this.getId());
+        return Objects.equals(that.getId(), this.getId())
+                && Objects.equals(that.getMyLongAttribute(), this.getMyLongAttribute())
+                && Objects.equals(that.getMyStringAttribute(), this.getMyStringAttribute());
     }
 
     @Override

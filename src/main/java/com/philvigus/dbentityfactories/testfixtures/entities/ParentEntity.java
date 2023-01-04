@@ -30,8 +30,8 @@ public class ParentEntity {
         }
 
         ParentEntity that = (ParentEntity) o;
-        
-        return Objects.equals(id, that.id);
+
+        return Objects.equals(id, that.id) && Objects.equals(this.getChildren(), that.getChildren());
     }
 
     @Override
