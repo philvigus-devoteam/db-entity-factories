@@ -36,7 +36,11 @@ public class EntityWithUniqueAttributes {
 
         EntityWithUniqueAttributes that = (EntityWithUniqueAttributes) o;
 
-        return Objects.equals(that.getId(), this.getId());
+        return Objects.equals(that.getId(), this.getId())
+                && Objects.equals(this.getUniqueString(), that.getUniqueString())
+                && Objects.equals(this.getUniqueLong(), that.getUniqueLong())
+                && Objects.equals(this.getRepeatableLong(), that.getRepeatableLong())
+                && Objects.equals(this.getRepeatableString(), that.getRepeatableString());
     }
 
     @Override
