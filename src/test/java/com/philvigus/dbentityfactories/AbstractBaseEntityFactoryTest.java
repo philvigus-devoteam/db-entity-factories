@@ -10,16 +10,17 @@ import com.philvigus.dbentityfactories.testfixtures.repositories.EntityWithUniqu
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@DataJpaTest
+@SpringBootTest
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
 class AbstractBaseEntityFactoryTest {
     BasicEntityFactory basicEntityFactory;
     EntityWithUniqueAttributesFactory entityWithUniqueAttributesFactory;
@@ -113,7 +114,7 @@ class AbstractBaseEntityFactoryTest {
         assertBasicEntityCorrectlyCreatedWithDefaultAttributes(basicEntity);
 
         assertEquals(1, savedEntities.size());
-        assertTrue(savedEntities.contains(basicEntity));
+        assertTrue(savedEntities.stream().anyMatch(o -> Objects.equals(o.getId(), basicEntity.getId())));
     }
 
     @Test
@@ -128,8 +129,8 @@ class AbstractBaseEntityFactoryTest {
         assertBasicEntityCorrectlyCreatedWithDefaultAttributes(basicEntities.get(1));
 
         assertEquals(numberOfEntities, savedEntities.size());
-        assertTrue(savedEntities.contains(basicEntities.get(0)));
-        assertTrue(savedEntities.contains(basicEntities.get(1)));
+        assertTrue(savedEntities.stream().anyMatch(o -> Objects.equals(o.getId(), basicEntities.get(0).getId())));
+        assertTrue(savedEntities.stream().anyMatch(o -> Objects.equals(o.getId(), basicEntities.get(1).getId())));
     }
 
     @Test
@@ -153,7 +154,7 @@ class AbstractBaseEntityFactoryTest {
         assertEquals(customStringValue, basicEntity.getMyStringAttribute());
 
         assertEquals(1, savedEntities.size());
-        assertTrue(savedEntities.contains(basicEntity));
+        assertTrue(savedEntities.stream().anyMatch(o -> Objects.equals(o.getId(), basicEntity.getId())));
     }
 
     @Test
@@ -184,8 +185,8 @@ class AbstractBaseEntityFactoryTest {
         assertEquals(customStringValue, basicEntities.get(1).getMyStringAttribute());
 
         assertEquals(numberOfEntities, savedEntities.size());
-        assertTrue(savedEntities.contains(basicEntities.get(0)));
-        assertTrue(savedEntities.contains(basicEntities.get(1)));
+        assertTrue(savedEntities.stream().anyMatch(o -> Objects.equals(o.getId(), basicEntities.get(0).getId())));
+        assertTrue(savedEntities.stream().anyMatch(o -> Objects.equals(o.getId(), basicEntities.get(1).getId())));
     }
 
     @Test
