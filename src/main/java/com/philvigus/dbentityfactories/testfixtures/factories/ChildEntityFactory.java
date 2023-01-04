@@ -15,8 +15,6 @@ import java.util.Map;
 public class ChildEntityFactory extends AbstractBaseEntityFactory<ChildEntity> {
     @Autowired
     public ChildEntityFactory(final JpaRepository<ChildEntity, Long> repository, ParentEntityFactory parentEntityFactory) {
-        super(ChildEntity.class, repository, null);
-
-        this.sortedDefaultAttributes = Map.of("parent", new DefaultAttribute<>("parent", parentEntityFactory::create));
+        super(ChildEntity.class, repository, Map.of("parent", new DefaultAttribute<>("parent", parentEntityFactory::create)));
     }
 }

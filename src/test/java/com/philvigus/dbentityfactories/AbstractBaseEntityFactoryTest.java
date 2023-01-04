@@ -2,12 +2,16 @@ package com.philvigus.dbentityfactories;
 
 import com.philvigus.dbentityfactories.attributes.CustomAttribute;
 import com.philvigus.dbentityfactories.testfixtures.entities.BasicEntity;
+import com.philvigus.dbentityfactories.testfixtures.entities.ChildEntity;
 import com.philvigus.dbentityfactories.testfixtures.entities.EntityWithUniqueAttributes;
+import com.philvigus.dbentityfactories.testfixtures.entities.ParentEntity;
 import com.philvigus.dbentityfactories.testfixtures.factories.BasicEntityFactory;
+import com.philvigus.dbentityfactories.testfixtures.factories.ChildEntityFactory;
 import com.philvigus.dbentityfactories.testfixtures.factories.EntityWithUniqueAttributesFactory;
 import com.philvigus.dbentityfactories.testfixtures.repositories.BasicEntityRepository;
+import com.philvigus.dbentityfactories.testfixtures.repositories.ChildEntityRepository;
 import com.philvigus.dbentityfactories.testfixtures.repositories.EntityWithUniqueAttributesRepository;
-import org.junit.jupiter.api.BeforeEach;
+import com.philvigus.dbentityfactories.testfixtures.repositories.ParentEntityRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -25,8 +29,14 @@ import static org.junit.jupiter.api.Assertions.*;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
 class AbstractBaseEntityFactoryTest {
+    @Autowired
     BasicEntityFactory basicEntityFactory;
+
+    @Autowired
     EntityWithUniqueAttributesFactory entityWithUniqueAttributesFactory;
+
+    @Autowired
+    ChildEntityFactory childEntityFactory;
 
     @Autowired
     BasicEntityRepository basicEntityRepository;
@@ -34,11 +44,10 @@ class AbstractBaseEntityFactoryTest {
     @Autowired
     EntityWithUniqueAttributesRepository entityWithUniqueAttributesRepository;
 
-    @BeforeEach
-    void setUp() {
-        basicEntityFactory = new BasicEntityFactory(basicEntityRepository);
-        entityWithUniqueAttributesFactory = new EntityWithUniqueAttributesFactory(entityWithUniqueAttributesRepository);
-    }
+    @Autowired
+    ChildEntityRepository childEntityRepository;
+    @Autowired
+    private ParentEntityRepository parentEntityRepository;
 
     @Test
     void makeCanReturnASingleBasicEntityWithItsAttributesCorrectlySet() {
@@ -234,6 +243,18 @@ class AbstractBaseEntityFactoryTest {
         assertNotEquals(savedEntities.get(0).getUniqueString(), savedEntities.get(1).getUniqueString());
         assertNotEquals(savedEntities.get(0).getUniqueString(), savedEntities.get(1).getUniqueString());
         assertNotEquals(savedEntities.get(1).getUniqueString(), savedEntities.get(2).getUniqueString());
+    }
+
+    @Test
+    void parentEntitiesAreCreatedAutomaticallyWhenChildEntitiesHaveAManyToOneRelationship() {
+        ChildEntity childEntity = childEntityFactory.create();
+
+        List<ParentEntity> savedParentEntities = parentEntityRepository.findAll();
+        List<ChildEntity> childEntities = childEntityRepository.findAll();
+
+        assertEquals(1, savedParentEntities.size());
+        assertEquals(1, childEntities.size());
+        assertEquals(savedParentEntities.get(0).getId(), childEntity.getParent().getId());
     }
 
     void assertBasicEntityCorrectlyMadeWithDefaultAttributes(final BasicEntity basicEntity) {
