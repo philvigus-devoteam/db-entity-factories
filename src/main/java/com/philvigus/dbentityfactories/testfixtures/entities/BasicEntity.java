@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -19,4 +20,24 @@ public class BasicEntity {
     private Long myLongAttribute;
 
     private String myStringAttribute;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        
+        BasicEntity that = (BasicEntity) o;
+
+        return Objects.equals(that.getId(), this.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, myLongAttribute, myStringAttribute);
+    }
 }
