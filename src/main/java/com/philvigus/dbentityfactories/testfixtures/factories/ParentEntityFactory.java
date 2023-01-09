@@ -8,9 +8,21 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Map;
 
+/**
+ * The Parent entity factory used by tests for this library.
+ */
 @EntityFactory
 public class ParentEntityFactory extends AbstractBaseEntityFactory<ParentEntity> {
+    /**
+     * Instantiates a new Parent entity factory.
+     *
+     * @param repository the repository used to save instances of the entity
+     */
     public ParentEntityFactory(final JpaRepository<ParentEntity, Long> repository) {
-        super(ParentEntity.class, repository, Map.of("stringAttribute", new DefaultAttribute<>("stringAttribute", () -> "string value")));
+        super(
+                ParentEntity.class,
+                repository,
+                Map.of("stringAttribute", new DefaultAttribute<>("stringAttribute", () -> "string value"))
+        );
     }
 }
