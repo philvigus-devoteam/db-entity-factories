@@ -6,6 +6,9 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.util.Objects;
 
+/**
+ * The entity with unique attributes class used by tests for this library.
+ */
 @Entity
 @Getter
 @Setter

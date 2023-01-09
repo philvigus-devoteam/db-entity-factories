@@ -7,14 +7,31 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Supplier;
 
+/**
+ * The Default attribute class.
+ * <p>
+ * Used as part of defining entity factories to specify how their attributes should be generated.
+ *
+ * @param <T> the type of the attribute
+ */
 @Getter
 public class DefaultAttribute<T> extends AbstractBaseAttribute<T> {
+    /**
+     * Defines the maximum attempts to generate a unique value before an exception is thrown.
+     */
     public static final int MAX_UNIQUE_ATTEMPTS = 100;
 
     private final boolean isUnique;
 
     private final Set<T> usedValues;
 
+    /**
+     * Instantiates a new Default attribute.
+     *
+     * @param name          the attribute name
+     * @param valueSupplier the value supplier used to generate the attribute value
+     * @param isUnique      sets whether the attribute values have to be unique
+     */
     public DefaultAttribute(final String name, final Supplier<T> valueSupplier, final boolean isUnique) {
         super(name, valueSupplier);
 
@@ -22,10 +39,22 @@ public class DefaultAttribute<T> extends AbstractBaseAttribute<T> {
         this.usedValues = new HashSet<>();
     }
 
+    /**
+     * Instantiates a new Default attribute with isUnique defaulting to false.
+     *
+     * @param name          the attribute name
+     * @param valueSupplier the value supplier used to generate the attribute value
+     */
     public DefaultAttribute(final String name, final Supplier<T> valueSupplier) {
         this(name, valueSupplier, false);
     }
 
+    /**
+     * Returns whether a value has already been used for this attribute.
+     *
+     * @param value the value to check
+     * @return whether the value has been used already
+     */
     public boolean hasUsedValue(final Object value) {
         try {
             return usedValues.contains((T) value);
@@ -34,6 +63,11 @@ public class DefaultAttribute<T> extends AbstractBaseAttribute<T> {
         }
     }
 
+    /**
+     * Adds a value to the used value list.
+     *
+     * @param value the value to be added
+     */
     public void addUsedValue(final Object value) {
         try {
             usedValues.add((T) value);
@@ -42,6 +76,11 @@ public class DefaultAttribute<T> extends AbstractBaseAttribute<T> {
         }
     }
 
+    /**
+     * Sets whether the attribute values generated have to be unique.
+     *
+     * @return the boolean
+     */
     public boolean isUnique() {
         return isUnique;
     }

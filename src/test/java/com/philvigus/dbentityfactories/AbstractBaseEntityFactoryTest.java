@@ -75,7 +75,7 @@ class AbstractBaseEntityFactoryTest {
         final String customStringName = "myStringAttribute";
         final String customStringValue = "a custom string value";
 
-        final BasicEntity basicEntity = basicEntityFactory.withAttributes(
+        final BasicEntity basicEntity = basicEntityFactory.withCustomAttributes(
                 Map.of(
                         customLongName, new CustomAttribute<>(customLongName, () -> customLongValue),
                         customStringName, new CustomAttribute<>(customStringName, () -> customStringValue)
@@ -97,7 +97,7 @@ class AbstractBaseEntityFactoryTest {
         final String customStringName = "myStringAttribute";
         final String customStringValue = "a custom string value";
 
-        final List<BasicEntity> basicEntities = basicEntityFactory.withAttributes(
+        final List<BasicEntity> basicEntities = basicEntityFactory.withCustomAttributes(
                 Map.of(
                         customLongName, new CustomAttribute<>(customLongName, () -> customLongValue),
                         customStringName, new CustomAttribute<>(customStringName, () -> customStringValue)
@@ -153,7 +153,7 @@ class AbstractBaseEntityFactoryTest {
         final String customStringName = "myStringAttribute";
         final String customStringValue = "a custom string value";
 
-        final BasicEntity basicEntity = basicEntityFactory.withAttributes(
+        final BasicEntity basicEntity = basicEntityFactory.withCustomAttributes(
                 Map.of(
                         customLongName, new CustomAttribute<>(customLongName, () -> customLongValue),
                         customStringName, new CustomAttribute<>(customStringName, () -> customStringValue)
@@ -179,7 +179,7 @@ class AbstractBaseEntityFactoryTest {
         final String customStringName = "myStringAttribute";
         final String customStringValue = "a custom string value";
 
-        final List<BasicEntity> basicEntities = basicEntityFactory.withAttributes(
+        final List<BasicEntity> basicEntities = basicEntityFactory.withCustomAttributes(
                 Map.of(
                         customLongName, new CustomAttribute<>(customLongName, () -> customLongValue),
                         customStringName, new CustomAttribute<>(customStringName, () -> customStringValue)
@@ -225,7 +225,7 @@ class AbstractBaseEntityFactoryTest {
         final int numberOfEntities = 3;
 
         final List<EntityWithUniqueAttributes> createdEntities = entityWithUniqueAttributesFactory
-                .withAttributes(
+                .withCustomAttributes(
                         Map.of(
                                 "uniqueString", new CustomAttribute<>("uniqueString", () -> {
                                     final List<String> list = Arrays.asList("bob", "eric", "steve");

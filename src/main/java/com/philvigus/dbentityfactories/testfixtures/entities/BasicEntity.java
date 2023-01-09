@@ -9,6 +9,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.util.Objects;
 
+/**
+ * The Basic entity class used by tests for this library
+ */
 @Entity
 @Getter
 @Setter
