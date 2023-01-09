@@ -45,10 +45,10 @@ public class EntityCreator {
 
     public void CreateEntities() {
         // create and persist 5 entities to the database
-        List<BasicEntity> savedEntities = basicEntityFactory.create(5);
+        List<BasicEntity> savedEntities = basicEntityFactory.persist(5);
 
         // create but don't persist them
-        List<BasicEntity> createdEntities = basicEntityFactory.make(5);
+        List<BasicEntity> createdEntities = basicEntityFactory.create(5);
     }
 }
 ```
@@ -67,8 +67,7 @@ public class EntityCreator {
                 customLongName, new CustomAttribute<>(customLongName, () -> 12L),
                 customStringName, new CustomAttribute<>(customStringName, () -> "A custom string value")
             )
-        ).create(5);
-
+        ).persist(5);
     }
 }
 ```
@@ -118,7 +117,7 @@ public class ChildEntity {
 public class ChildEntityFactory extends AbstractBaseEntityFactory<ChildEntity> {
     @Autowired
     public ChildEntityFactory(final JpaRepository<ChildEntity, Long> repository, ParentEntityFactory parentEntityFactory) {
-        // will automatically create and save the parent entity as well
+        // will automatically create and save the parent entity when the factory is used to create a child entity
         super(ChildEntity.class, repository, Map.of("parent", new DefaultAttribute<>("parent", parentEntityFactory::create)));
     }
 }

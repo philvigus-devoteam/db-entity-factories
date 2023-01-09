@@ -51,7 +51,7 @@ class AbstractBaseEntityFactoryTest {
 
     @Test
     void makeCanReturnASingleBasicEntityWithItsAttributesCorrectlySet() {
-        final BasicEntity basicEntity = basicEntityFactory.make();
+        final BasicEntity basicEntity = basicEntityFactory.create();
 
         assertBasicEntityCorrectlyMadeWithDefaultAttributes(basicEntity);
     }
@@ -60,7 +60,7 @@ class AbstractBaseEntityFactoryTest {
     void makeCanReturnAListOfMultipleBasicEntitiesWithTheirAttributesCorrectlySet() {
         final int numberOfEntities = 2;
 
-        final List<BasicEntity> basicEntities = basicEntityFactory.make(numberOfEntities);
+        final List<BasicEntity> basicEntities = basicEntityFactory.create(numberOfEntities);
 
         assertEquals(numberOfEntities, basicEntities.size());
         assertBasicEntityCorrectlyMadeWithDefaultAttributes(basicEntities.get(0));
@@ -80,7 +80,7 @@ class AbstractBaseEntityFactoryTest {
                         customLongName, new CustomAttribute<>(customLongName, () -> customLongValue),
                         customStringName, new CustomAttribute<>(customStringName, () -> customStringValue)
                 )
-        ).make();
+        ).create();
 
         assertNull(basicEntity.getId());
         assertEquals(customLongValue, basicEntity.getMyLongAttribute());
@@ -102,7 +102,7 @@ class AbstractBaseEntityFactoryTest {
                         customLongName, new CustomAttribute<>(customLongName, () -> customLongValue),
                         customStringName, new CustomAttribute<>(customStringName, () -> customStringValue)
                 )
-        ).make(numberOfEntities);
+        ).create(numberOfEntities);
 
         assertNull(basicEntities.get(0).getId());
         assertEquals(customLongValue, basicEntities.get(0).getMyLongAttribute());
@@ -115,12 +115,12 @@ class AbstractBaseEntityFactoryTest {
 
     @Test
     void makeThrowsAnExceptionIfCopiesIsLessThanOne() {
-        assertThrows(IllegalArgumentException.class, () -> basicEntityFactory.make(0));
+        assertThrows(IllegalArgumentException.class, () -> basicEntityFactory.create(0));
     }
 
     @Test
     void createCanReturnAndSaveASingleBasicEntityWithItsAttributesCorrectlySetToTheDatabase() {
-        final BasicEntity basicEntity = basicEntityFactory.create();
+        final BasicEntity basicEntity = basicEntityFactory.persist();
         final List<BasicEntity> savedEntities = basicEntityRepository.findAll();
 
         assertBasicEntityCorrectlyCreatedWithDefaultAttributes(basicEntity);
@@ -133,7 +133,7 @@ class AbstractBaseEntityFactoryTest {
     void createCanReturnAndSaveMultipleBasicEntitiesWithTheirAttributesCorrectlySetToTheDatabase() {
         final int numberOfEntities = 2;
 
-        final List<BasicEntity> basicEntities = basicEntityFactory.create(numberOfEntities);
+        final List<BasicEntity> basicEntities = basicEntityFactory.persist(numberOfEntities);
         final List<BasicEntity> savedEntities = basicEntityRepository.findAll();
 
         assertEquals(numberOfEntities, basicEntities.size());
@@ -158,7 +158,7 @@ class AbstractBaseEntityFactoryTest {
                         customLongName, new CustomAttribute<>(customLongName, () -> customLongValue),
                         customStringName, new CustomAttribute<>(customStringName, () -> customStringValue)
                 )
-        ).create();
+        ).persist();
 
         final List<BasicEntity> savedEntities = basicEntityRepository.findAll();
 
@@ -184,7 +184,7 @@ class AbstractBaseEntityFactoryTest {
                         customLongName, new CustomAttribute<>(customLongName, () -> customLongValue),
                         customStringName, new CustomAttribute<>(customStringName, () -> customStringValue)
                 )
-        ).create(numberOfEntities);
+        ).persist(numberOfEntities);
 
         final List<BasicEntity> savedEntities = basicEntityRepository.findAll();
 
@@ -203,14 +203,14 @@ class AbstractBaseEntityFactoryTest {
 
     @Test
     void createThrowsAnExceptionIfCopiesIsLessThanOne() {
-        assertThrows(IllegalArgumentException.class, () -> basicEntityFactory.create(0));
+        assertThrows(IllegalArgumentException.class, () -> basicEntityFactory.persist(0));
     }
 
     @Test
     void factoriesCanCreateMultipleEntitiesWithUniqueDefaultAttributesCorrectly() {
         final int numberOfEntities = 3;
 
-        final List<EntityWithUniqueAttributes> createdEntities = entityWithUniqueAttributesFactory.create(numberOfEntities);
+        final List<EntityWithUniqueAttributes> createdEntities = entityWithUniqueAttributesFactory.persist(numberOfEntities);
         final List<EntityWithUniqueAttributes> savedEntities = entityWithUniqueAttributesRepository.findAll();
 
         assertEquals(numberOfEntities, createdEntities.size());
@@ -235,7 +235,7 @@ class AbstractBaseEntityFactoryTest {
                                 })
                         )
                 )
-                .create(numberOfEntities);
+                .persist(numberOfEntities);
         final List<EntityWithUniqueAttributes> savedEntities = entityWithUniqueAttributesRepository.findAll();
 
         assertEquals(numberOfEntities, createdEntities.size());
@@ -247,7 +247,7 @@ class AbstractBaseEntityFactoryTest {
 
     @Test
     void parentEntitiesAreCreatedAutomaticallyWhenChildEntitiesHaveAManyToOneRelationship() {
-        ChildEntity childEntity = childEntityFactory.create();
+        ChildEntity childEntity = childEntityFactory.persist();
 
         List<ParentEntity> savedParentEntities = parentEntityRepository.findAll();
         List<ChildEntity> childEntities = childEntityRepository.findAll();

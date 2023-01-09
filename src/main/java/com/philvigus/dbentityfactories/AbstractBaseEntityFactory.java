@@ -36,6 +36,22 @@ public abstract class AbstractBaseEntityFactory<T> {
     }
 
     @Transactional
+    public List<T> persist(final int copies) {
+        if (copies < 1) {
+            throw new IllegalArgumentException("copies must be greater than 0");
+        }
+
+        final List<T> entities = new ArrayList<>(copies);
+
+        IntStream.range(0, copies).forEach(i -> entities.add(persist()));
+
+        return entities;
+    }
+
+    public T persist() {
+        return repository.save(getEntityWithAttributesSet(customAttributes));
+    }
+
     public List<T> create(final int copies) {
         if (copies < 1) {
             throw new IllegalArgumentException("copies must be greater than 0");
@@ -49,22 +65,6 @@ public abstract class AbstractBaseEntityFactory<T> {
     }
 
     public T create() {
-        return repository.save(getEntityWithAttributesSet(customAttributes));
-    }
-
-    public List<T> make(final int copies) {
-        if (copies < 1) {
-            throw new IllegalArgumentException("copies must be greater than 0");
-        }
-
-        final List<T> entities = new ArrayList<>(copies);
-
-        IntStream.range(0, copies).forEach(i -> entities.add(make()));
-
-        return entities;
-    }
-
-    public T make() {
         return getEntityWithAttributesSet(customAttributes);
     }
 
