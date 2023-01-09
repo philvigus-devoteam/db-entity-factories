@@ -4,15 +4,18 @@ import com.philvigus.dbentityfactories.AbstractBaseEntityFactory;
 import com.philvigus.dbentityfactories.annotations.EntityFactory;
 import com.philvigus.dbentityfactories.attributes.DefaultAttribute;
 import com.philvigus.dbentityfactories.testfixtures.entities.EntityWithUniqueAttributes;
+import net.datafaker.Faker;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Map;
 
 @EntityFactory
 public class EntityWithUniqueAttributesFactory extends AbstractBaseEntityFactory<EntityWithUniqueAttributes> {
+    private static final Faker faker = new Faker();
+
     public EntityWithUniqueAttributesFactory(final JpaRepository<EntityWithUniqueAttributes, Long> repository) {
         super(EntityWithUniqueAttributes.class, repository, Map.of(
-                "uniqueString", new DefaultAttribute<>("uniqueString", () -> AbstractBaseEntityFactory.faker.lorem().sentence(), true),
+                "uniqueString", new DefaultAttribute<>("uniqueString", () -> EntityWithUniqueAttributesFactory.faker.lorem().sentence(), true),
                 "repeatableString", new DefaultAttribute<>("repeatableString", () -> "This can be the same in different entities of this type")
         ));
     }

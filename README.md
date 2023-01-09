@@ -4,6 +4,8 @@ This library allows you to easily create and persist large numbers of entities w
 also allows you to override these properties if you require an attribute to be set to a specific value or generally have
 a different set of creation rules.
 
+Functionality borrows heavily from the implementation of factories in Laravel.
+
 ## Simple Entities
 
 For a simple entity with no relationships:

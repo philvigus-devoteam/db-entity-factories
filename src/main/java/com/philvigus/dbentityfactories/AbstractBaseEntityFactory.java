@@ -3,7 +3,6 @@ package com.philvigus.dbentityfactories;
 import com.philvigus.dbentityfactories.attributes.CustomAttribute;
 import com.philvigus.dbentityfactories.attributes.DefaultAttribute;
 import com.philvigus.dbentityfactories.exceptions.EntityFactoryException;
-import net.datafaker.Faker;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,10 +16,9 @@ import java.util.stream.IntStream;
 import static org.apache.commons.beanutils.BeanUtils.setProperty;
 
 public abstract class AbstractBaseEntityFactory<T> {
-    protected static final Faker faker = new Faker();
+
     protected final Class<T> entityClass;
     protected final JpaRepository<T, Long> repository;
-
     protected Map<String, CustomAttribute<?>> customAttributes;
     protected Map<String, DefaultAttribute<?>> sortedDefaultAttributes;
 
