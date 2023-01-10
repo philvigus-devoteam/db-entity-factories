@@ -79,7 +79,8 @@ public class EntityCreator {
     BasicEntityFactory basicEntityFactory;
     
     private final Map<String, CustomAttribute<?>> customAttributes = Map.of(
-        customLongName, new CustomAttribute<>(customLongName, () -> 12L)
+            BasicEntityFactory.LONG_ATTRIBUTE_NAME,
+            new CustomAttribute<>(BasicEntityFactory.LONG_ATTRIBUTE_NAME, () -> 12L)
     );
 
     public void CreateEntities() {
