@@ -69,16 +69,13 @@ class AbstractBaseEntityFactoryTest {
 
     @Test
     void makeCanReturnASingleBasicEntityWithCustomAttributesSet() {
-        final String customLongName = "myLongAttribute";
         final Long customLongValue = 999L;
-
-        final String customStringName = "myStringAttribute";
         final String customStringValue = "a custom string value";
 
         final BasicEntity basicEntity = basicEntityFactory.withCustomAttributes(
                 Map.of(
-                        customLongName, new CustomAttribute<>(customLongName, () -> customLongValue),
-                        customStringName, new CustomAttribute<>(customStringName, () -> customStringValue)
+                        BasicEntityFactory.LONG_ATTRIBUTE_NAME, new CustomAttribute<>(BasicEntityFactory.LONG_ATTRIBUTE_NAME, () -> customLongValue),
+                        BasicEntityFactory.STRING_ATTRIBUTE_NAME, new CustomAttribute<>(BasicEntityFactory.STRING_ATTRIBUTE_NAME, () -> customStringValue)
                 )
         ).create();
 

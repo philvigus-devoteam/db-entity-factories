@@ -61,6 +61,22 @@ public abstract class AbstractBaseEntityFactory<T> {
     }
 
     /**
+     * Instantiates a new Abstract base entity factory.
+     *
+     * @param entityClass       the entity class
+     * @param repository        the repository used to save instances of the entity
+     */
+    protected AbstractBaseEntityFactory(
+            final Class<T> entityClass,
+            final JpaRepository<T, Long> repository) {
+        this.entityClass = entityClass;
+        this.repository = repository;
+
+        this.defaultAttributes = new ConcurrentHashMap<>();
+        this.customAttributes = new ConcurrentHashMap<>();
+    }
+
+    /**
      * Creates and saves a specified number of entities.
      *
      * @param copies the number of entities to save
