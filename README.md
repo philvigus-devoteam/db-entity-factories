@@ -70,8 +70,8 @@ public class EntityCreator {
 
 ## Overriding Default Attributes
 
-Custom attributes can be specified using the `withAttributes()` function. In the example below, each entity will have `myLongAttribute` set to `12` and `myStringAttribute` set to
-`A custom string value`, overriding the default attribute creation rules specified in the factory itself:
+Custom attributes can be specified using the `withAttributes()` function. In the example below, each entity will have
+`myLongAttribute` set to `12`, overriding the default attribute creation rule specified in the factory itself:
 
 ```java
 public class EntityCreator {
@@ -79,8 +79,7 @@ public class EntityCreator {
     BasicEntityFactory basicEntityFactory;
     
     private final Map<String, CustomAttribute<?>> customAttributes = Map.of(
-        customLongName, new CustomAttribute<>(customLongName, () -> 12L),
-        customStringName, new CustomAttribute<>(customStringName, () -> "A custom string value")
+        customLongName, new CustomAttribute<>(customLongName, () -> 12L)
     );
 
     public void CreateEntities() {
