@@ -2,6 +2,7 @@ package com.philvigus.dbentityfactories.attributes;
 
 import com.philvigus.dbentityfactories.exceptions.EntityFactoryException;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
@@ -10,19 +11,19 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 class DefaultAttributeTest {
-    @Test
+    final Integer defaultAttributeValue = 5;
+    final  DefaultAttribute<Integer> defaultAttribute = new DefaultAttribute<>("defaultIntegerAttribute", () -> defaultAttributeValue);
+    @RepeatedTest(20)
     void getValueReturnsAConstantForAConstantAttribute() {
-        final DefaultAttribute<Integer> defaultAttribute = new DefaultAttribute<>("defaultIntegerAttribute", () -> 5);
-
         final Integer firstValue = defaultAttribute.getValue();
         final Integer secondValue = defaultAttribute.getValue();
 
-        assertEquals(firstValue, secondValue);
-
+        assertEquals(defaultAttributeValue, firstValue);
+        assertEquals(defaultAttributeValue, secondValue);
     }
 
-    @Test
-    void getValueReturnsDifferentValuesWhenUsedMultipleTimesForANonConstantAttribute() throws InterruptedException {
+    @RepeatedTest(20)
+    void getValueReturnsDifferentValuesWhenUsedMultipleTimesForANonConstantAttribute() {
         final DefaultAttribute<UUID> defaultAttribute = new DefaultAttribute<>("defaultIntegerAttribute", UUID::randomUUID);
 
         final UUID firstValue = defaultAttribute.getValue();
@@ -33,15 +34,6 @@ class DefaultAttributeTest {
 
     @Test
     void getValueThrowsAnExceptionIfTheAttributeIsUniqueAndNoUniqueValuesCanBeFound() {
-        final DefaultAttribute<Integer> defaultAttribute = new DefaultAttribute<>("defaultIntegerAttribute", () -> 5, true);
-
-        defaultAttribute.getValue();
-
-        Assertions.assertThrows(EntityFactoryException.class, defaultAttribute::getValue);
-    }
-
-    @Test
-    void getValueReturnsUniqueAttributeIsUnique() {
         final DefaultAttribute<Integer> defaultAttribute = new DefaultAttribute<>("defaultIntegerAttribute", () -> 5, true);
 
         defaultAttribute.getValue();
