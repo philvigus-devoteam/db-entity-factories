@@ -1,8 +1,8 @@
 # Database Entity Factories
 
-This library allows you to easily create and persist large numbers of entities with random but logical attributes. It
-also allows you to override these properties if you require an attribute to be set to a specific value or generally have
-a different set of creation rules.
+This library allows you to easily create and persist large numbers of entities with random but logical attributes using
+Spring Boot and Hibernate. It also allows you to override these properties if you require an attribute to be set to a
+specific value or generally have a different set of creation rules.
 
 The examples in this repository use the [datafaker](https://www.datafaker.net/) package to create random attributes as required.
 
@@ -50,8 +50,8 @@ public class BasicEntityFactory extends AbstractBaseEntityFactory<BasicEntity> {
 }
 ```
 
-Entities can then be made with attributes based on the generators specified in the factory. In this case, each entity
-will have `myLongAttribute` set to a random value between 1 and 5, and `myStringAttribute` set to a random sentence:
+Whenever this factory is used to `create` or `persist` entities, each entity will have
+a long attribute with a random value between 1 and 5, and a string attribute with a value set to a random sentence.
 
 ```java
 public class EntityCreator {
@@ -94,7 +94,7 @@ The uniqueness of an attribute is specified by the third parameter to the attrib
 defaults to false.
 
 For factories to correctly handle unique attribute values, you must allow Spring Boot to manage their lifecycle by annotating
-the class with `@EntityFactory` and use dependency injection rather than using a factory's constructor.
+the factory with `@EntityFactory`. You then use the factory with dependency injection rather its constructor.
 
 A set number of attempts will be made to generate each unique value, after which it will throw an exception:
 
