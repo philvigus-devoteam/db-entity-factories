@@ -14,6 +14,9 @@ import java.util.Map;
  */
 @EntityFactory
 public class BasicEntityFactory extends AbstractBaseEntityFactory<BasicEntity> {
+    public static final String LONG_ATTRIBUTE_NAME = "myLongAttribute";
+    public static final String STRING_ATTRIBUTE_NAME = "myStringAttribute";
+
     private static final Faker faker = new Faker();
 
     /**
@@ -23,8 +26,10 @@ public class BasicEntityFactory extends AbstractBaseEntityFactory<BasicEntity> {
      */
     public BasicEntityFactory(final JpaRepository<BasicEntity, Long> repository) {
         super(BasicEntity.class, repository, Map.of(
-                "myLongAttribute", new DefaultAttribute<>("myLongAttribute", () -> BasicEntityFactory.faker.number().numberBetween(1L, 5L)),
-                "myStringAttribute", new DefaultAttribute<>("myStringAttribute", () -> BasicEntityFactory.faker.lorem().sentence())
+                BasicEntityFactory.LONG_ATTRIBUTE_NAME,
+                new DefaultAttribute<>(BasicEntityFactory.LONG_ATTRIBUTE_NAME, () -> BasicEntityFactory.faker.number().numberBetween(1L, 5L)),
+                BasicEntityFactory.STRING_ATTRIBUTE_NAME,
+                new DefaultAttribute<>(BasicEntityFactory.STRING_ATTRIBUTE_NAME, () -> BasicEntityFactory.faker.lorem().sentence())
         ));
     }
 }

@@ -5,7 +5,6 @@ import com.philvigus.dbentityfactories.annotations.EntityFactory;
 import com.philvigus.dbentityfactories.attributes.DefaultAttribute;
 import com.philvigus.dbentityfactories.testfixtures.entities.ChildEntity;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Map;
@@ -14,8 +13,9 @@ import java.util.Map;
  * The Child entity factory used by tests for this library.
  */
 @EntityFactory
-@DependsOn("parentEntityFactory")
 public class ChildEntityFactory extends AbstractBaseEntityFactory<ChildEntity> {
+    public static final String PARENT_ATTRIBUTE_NAME = "parent";
+
     /**
      * Instantiates a new Child entity factory.
      *
@@ -24,6 +24,13 @@ public class ChildEntityFactory extends AbstractBaseEntityFactory<ChildEntity> {
      */
     @Autowired
     public ChildEntityFactory(final JpaRepository<ChildEntity, Long> repository, ParentEntityFactory parentEntityFactory) {
-        super(ChildEntity.class, repository, Map.of("parent", new DefaultAttribute<>("parent", parentEntityFactory::persist)));
+        super(
+                ChildEntity.class,
+                repository,
+                Map.of(
+                        ChildEntityFactory.PARENT_ATTRIBUTE_NAME,
+                        new DefaultAttribute<>(ChildEntityFactory.PARENT_ATTRIBUTE_NAME, parentEntityFactory::persist)
+                )
+        );
     }
 }

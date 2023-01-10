@@ -13,6 +13,8 @@ import java.util.Map;
  */
 @EntityFactory
 public class ParentEntityFactory extends AbstractBaseEntityFactory<ParentEntity> {
+    public static final String STRING_ATTRIBUTE_NAME = "stringAttribute";
+
     /**
      * Instantiates a new Parent entity factory.
      *
@@ -22,7 +24,10 @@ public class ParentEntityFactory extends AbstractBaseEntityFactory<ParentEntity>
         super(
                 ParentEntity.class,
                 repository,
-                Map.of("stringAttribute", new DefaultAttribute<>("stringAttribute", () -> "string value"))
+                Map.of(
+                        ParentEntityFactory.STRING_ATTRIBUTE_NAME,
+                        new DefaultAttribute<>(ParentEntityFactory.STRING_ATTRIBUTE_NAME, () -> "string value")
+                )
         );
     }
 }
