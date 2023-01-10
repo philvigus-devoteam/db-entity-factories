@@ -50,7 +50,8 @@ public class BasicEntityFactory extends AbstractBaseEntityFactory<BasicEntity> {
 }
 ```
 
-Entities can then be made with attributes based on the generators specified in the factory:
+Entities can then be made with attributes based on the generators specified in the factory. In this case, each entity
+will have `myLongAttribute` set to a random value between 1 and 5, and `myStringAttribute` set to a random sentence:
 
 ```java
 public class EntityCreator {
@@ -68,6 +69,11 @@ public class EntityCreator {
 ```
 
 ## Overriding Default Attributes
+
+Custom attributes can be passed into `persist()` or `create()`. These will override the default values specified in the
+factory. In the example below, each entity will have `myLongAttribute` set to `12` and `myStringAttribute` set to
+`A custom string value`:
+
 ```java
 public class EntityCreator {
     @Autowired
@@ -83,10 +89,17 @@ public class EntityCreator {
     }
 }
 ```
-## Unique Attributes
-For factories to correctly handle unique attributes, you must allow Spring Boot to manage their lifecycle by annotating
-the class with `@EntityFactory` and using dependency injection. You must not explicitly usw a factory's constructor to
-create an instance.
+
+## Unique Attribute Values
+
+The uniqueness of an attribute is specified by the third parameter to the attribute's constructor. If left out, then it
+defaults to false.
+
+For factories to correctly handle unique attribute values, you must allow Spring Boot to manage their lifecycle by annotating
+the class with `@EntityFactory` and use dependency injection rather than using a factory's constructor.
+
+A set number of attempts will be made to generate each unique value, after which it will throw an exception:
+
 ```java
 @EntityFactory
 public class BasicEntityFactory extends AbstractBaseEntityFactory<BasicEntity> {
@@ -97,7 +110,7 @@ public class BasicEntityFactory extends AbstractBaseEntityFactory<BasicEntity> {
 
     public BasicEntityFactory(final JpaRepository<BasicEntity, Long> repository) {
         super(BasicEntity.class, repository, Map.of(
-                // All myLongAttribute values are guaranteed to be unique
+                // All myLongAttribute values are guaranteed to be unique. If this is not possible, an exception will be thrown
                 BasicEntityFactory.LONG_ATTRIBUTE_NAME,
                 new DefaultAttribute<>(BasicEntityFactory.LONG_ATTRIBUTE_NAME, () -> AbstractBaseEntityFactory.faker.number().numberBetween(1L, 5L), true),
                 BasicEntityFactory.STRING_ATTRIBUTE_NAME,
@@ -106,12 +119,13 @@ public class BasicEntityFactory extends AbstractBaseEntityFactory<BasicEntity> {
     }
 }
 ```
-A set number of attempts will be made to generate each unique value, after which it will throw an exception.
 
 ## One-to-many and many-to-many relationships
-Say you have two entities, parent and child. A child cannot exist without its corresponding parent entity. This can
-easily be handled with factories so that when a factory creates a child, it also handles the creation and linking to the
+
+Say you have two entities, parent and child. A parent can have between zero and many children, while a child must have a parent.
+This type of relationship can easily be handled so that when a factory creates a child, it also creates and links to a
 child's parent entity.
+
 ```java
 public class ParentEntity {
     @Id
