@@ -4,6 +4,10 @@ This library allows you to easily create and persist large numbers of entities w
 Spring Boot and Hibernate. It also allows you to override these properties if you require an attribute to be set to a
 specific value or generally have a different set of creation rules.
 
+It's intended to be used for tests, when you need to create an instance of a model but don't necessarily care exactly what
+most of the attributes are for, or for quickly populating a database with test data without having to individually specify
+each entity's attributes.
+
 The examples in this repository use the [datafaker](https://www.datafaker.net/) package to create random attributes as required.
 
 Functionality borrows heavily from the implementation of factories in Laravel.
