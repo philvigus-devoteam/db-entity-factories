@@ -70,9 +70,8 @@ public class EntityCreator {
 
 ## Overriding Default Attributes
 
-Custom attributes can be passed into `persist()` or `create()`. These will override the default values specified in the
-factory. In the example below, each entity will have `myLongAttribute` set to `12` and `myStringAttribute` set to
-`A custom string value`:
+Custom attributes can be specified using the `withAttributes()` function. In the example below, each entity will have `myLongAttribute` set to `12` and `myStringAttribute` set to
+`A custom string value`, overriding the default attribute creation rules specified in the factory itself:
 
 ```java
 public class EntityCreator {
