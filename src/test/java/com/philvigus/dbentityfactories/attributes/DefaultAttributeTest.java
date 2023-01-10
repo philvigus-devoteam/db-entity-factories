@@ -13,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 class DefaultAttributeTest {
     final Integer defaultAttributeValue = 5;
     final  DefaultAttribute<Integer> defaultAttribute = new DefaultAttribute<>("defaultIntegerAttribute", () -> defaultAttributeValue);
+
     @RepeatedTest(20)
     void getValueReturnsAConstantForAConstantAttribute() {
         final Integer firstValue = defaultAttribute.getValue();
