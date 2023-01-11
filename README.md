@@ -4,11 +4,14 @@ This library allows you to easily create and persist large numbers of entities w
 Spring Boot and Hibernate. It also allows you to override these properties if you require an attribute to be set to a
 specific value or generally have a different set of creation rules.
 
-It's intended to be used for tests, when you need to create an instance of a model but don't necessarily care exactly what
-most of the attributes are for, or for quickly populating a database with test data without having to individually specify
+It's intended to be used for tests, when you need to create an instance of a model but don't necessarily care exactly
+what
+most of the attributes are for, or for quickly populating a database with test data without having to individually
+specify
 each entity's attributes.
 
-The examples in this repository use the [datafaker](https://www.datafaker.net/) package to create random attributes as required.
+The examples in this repository use the [datafaker](https://www.datafaker.net/) package to create random attributes as
+required.
 
 Functionality borrows heavily from the implementation of factories in Laravel.
 
@@ -33,23 +36,24 @@ public class BasicEntity {
 You define a factory as follows:
 
 ```java
+
 @EntityFactory
 public class BasicEntityFactory extends AbstractBaseEntityFactory<BasicEntity> {
     public static final String LONG_ATTRIBUTE_NAME = "myLongAttribute";
     public static final String STRING_ATTRIBUTE_NAME = "myStringAttribute";
-    
+
     private static final Faker faker = new Faker();
 
     private final String longAttributeName = "myLongAttribute";
     private final String stringAttributeName = "myStringAttribute";
-    
+
     public BasicEntityFactory(final JpaRepository<BasicEntity, Long> repository) {
-        super(BasicEntity.class, repository, Map.of(
-                BasicEntityFactory.LONG_ATTRIBUTE_NAME,
+        super(
+                BasicEntity.class, 
+                repository,
                 new DefaultAttribute<>(BasicEntityFactory.LONG_ATTRIBUTE_NAME, () -> BasicEntityFactory.faker.number().numberBetween(1L, 5L)),
-                BasicEntityFactory.STRING_ATTRIBUTE_NAME,
                 new DefaultAttribute<>(BasicEntityFactory.STRING_ATTRIBUTE_NAME, () -> BasicEntityFactory.faker.lorem().sentence())
-        ));
+        );
     }
 }
 ```
@@ -95,12 +99,14 @@ public class EntityCreator {
 The uniqueness of an attribute is specified by the third parameter to the attribute's constructor. If left out, then it
 defaults to false.
 
-For factories to correctly handle unique attribute values, you must allow Spring Boot to manage their lifecycle by annotating
+For factories to correctly handle unique attribute values, you must allow Spring Boot to manage their lifecycle by
+annotating
 the factory with `@EntityFactory`. You then use the factory with dependency injection rather its constructor.
 
 A set number of attempts will be made to generate each unique value, after which it will throw an exception:
 
 ```java
+
 @EntityFactory
 public class BasicEntityFactory extends AbstractBaseEntityFactory<BasicEntity> {
     public static final String LONG_ATTRIBUTE_NAME = "myLongAttribute";
@@ -109,20 +115,21 @@ public class BasicEntityFactory extends AbstractBaseEntityFactory<BasicEntity> {
     private static final Faker faker = new Faker();
 
     public BasicEntityFactory(final JpaRepository<BasicEntity, Long> repository) {
-        super(BasicEntity.class, repository, Map.of(
+        super(
+                BasicEntity.class,
+                repository,
                 // All myLongAttribute values are guaranteed to be unique. If this is not possible, an exception will be thrown
-                BasicEntityFactory.LONG_ATTRIBUTE_NAME,
                 new DefaultAttribute<>(BasicEntityFactory.LONG_ATTRIBUTE_NAME, () -> AbstractBaseEntityFactory.faker.number().numberBetween(1L, 5L), true),
-                BasicEntityFactory.STRING_ATTRIBUTE_NAME,
                 new DefaultAttribute<>(BasicEntityFactory.STRING_ATTRIBUTE_NAME, () -> AbstractBaseEntityFactory.faker.lorem().sentence())
-        ));
+        );
     }
 }
 ```
 
 ## One-to-many and many-to-many relationships
 
-Say you have two entities, parent and child. A parent can have between zero and many children, while a child must have a parent.
+Say you have two entities, parent and child. A parent can have between zero and many children, while a child must have a
+parent.
 This type of relationship can easily be handled so that when a factory creates a child, it also creates and links to a
 child's parent entity.
 
@@ -164,17 +171,14 @@ public class ParentEntityFactory extends AbstractBaseEntityFactory<ParentEntity>
 @EntityFactory
 public class ChildEntityFactory extends AbstractBaseEntityFactory<ChildEntity> {
     public static final String PARENT_ATTRIBUTE_NAME = "parent";
-    
+
     @Autowired
     public ChildEntityFactory(final JpaRepository<ChildEntity, Long> repository, ParentEntityFactory parentEntityFactory) {
         super(
                 ChildEntity.class,
                 repository,
                 // will automatically create and save the parent entity when the factory is used to create a child entity
-                Map.of(
-                        ChildEntityFactory.PARENT_ATTRIBUTE_NAME,
-                        new DefaultAttribute<>(ChildEntityFactory.PARENT_ATTRIBUTE_NAME, parentEntityFactory::create)
-                )
+                new DefaultAttribute<>(ChildEntityFactory.PARENT_ATTRIBUTE_NAME, parentEntityFactory::create)
         );
     }
 }
