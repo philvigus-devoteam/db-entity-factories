@@ -6,8 +6,6 @@ import com.philvigus.dbentityfactories.attributes.DefaultAttribute;
 import com.philvigus.dbentityfactories.testfixtures.entities.ParentEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Map;
-
 /**
  * The Parent entity factory used by tests for this library.
  */
@@ -24,10 +22,7 @@ public class ParentEntityFactory extends AbstractBaseEntityFactory<ParentEntity>
         super(
                 ParentEntity.class,
                 repository,
-                Map.of(
-                        ParentEntityFactory.STRING_ATTRIBUTE_NAME,
-                        new DefaultAttribute<>(ParentEntityFactory.STRING_ATTRIBUTE_NAME, () -> "string value")
-                )
+                new DefaultAttribute<>(ParentEntityFactory.STRING_ATTRIBUTE_NAME, () -> "string value")
         );
     }
 }

@@ -52,27 +52,16 @@ public abstract class AbstractBaseEntityFactory<T> {
     protected AbstractBaseEntityFactory(
             final Class<T> entityClass,
             final JpaRepository<T, Long> repository,
-            final Map<String, DefaultAttribute<?>> defaultAttributes) {
-        this.entityClass = entityClass;
-        this.repository = repository;
-
-        this.defaultAttributes = defaultAttributes;
-        this.customAttributes = new ConcurrentHashMap<>();
-    }
-
-    /**
-     * Instantiates a new Abstract base entity factory.
-     *
-     * @param entityClass the entity class
-     * @param repository  the repository used to save instances of the entity
-     */
-    protected AbstractBaseEntityFactory(
-            final Class<T> entityClass,
-            final JpaRepository<T, Long> repository) {
+            final DefaultAttribute<?>... defaultAttributes) {
         this.entityClass = entityClass;
         this.repository = repository;
 
         this.defaultAttributes = new ConcurrentHashMap<>();
+
+        for (DefaultAttribute<?> defaultAttribute : defaultAttributes) {
+            this.defaultAttributes.put(defaultAttribute.getName(), defaultAttribute);
+        }
+
         this.customAttributes = new ConcurrentHashMap<>();
     }
 
