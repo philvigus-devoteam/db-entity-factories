@@ -63,8 +63,8 @@ public abstract class AbstractBaseEntityFactory<T> {
     /**
      * Instantiates a new Abstract base entity factory.
      *
-     * @param entityClass       the entity class
-     * @param repository        the repository used to save instances of the entity
+     * @param entityClass the entity class
+     * @param repository  the repository used to save instances of the entity
      */
     protected AbstractBaseEntityFactory(
             final Class<T> entityClass,
@@ -137,8 +137,10 @@ public abstract class AbstractBaseEntityFactory<T> {
      * @param customAttributes the custom attributes to use
      * @return the abstract base entity factory using the custom attributes
      */
-    public AbstractBaseEntityFactory<T> withCustomAttributes(final Map<String, CustomAttribute<?>> customAttributes) {
-        this.customAttributes = customAttributes;
+    public AbstractBaseEntityFactory<T> withCustomAttributes(final CustomAttribute<?>... customAttributes) {
+        for (CustomAttribute<?> customAttribute : customAttributes) {
+            this.customAttributes.put(customAttribute.getName(), customAttribute);
+        }
 
         return this;
     }

@@ -20,7 +20,6 @@ import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -73,10 +72,8 @@ class AbstractBaseEntityFactoryTest {
         final String customStringValue = "a custom string value";
 
         final BasicEntity basicEntity = basicEntityFactory.withCustomAttributes(
-                Map.of(
-                        BasicEntityFactory.LONG_ATTRIBUTE_NAME, new CustomAttribute<>(BasicEntityFactory.LONG_ATTRIBUTE_NAME, () -> customLongValue),
-                        BasicEntityFactory.STRING_ATTRIBUTE_NAME, new CustomAttribute<>(BasicEntityFactory.STRING_ATTRIBUTE_NAME, () -> customStringValue)
-                )
+                new CustomAttribute<>(BasicEntityFactory.LONG_ATTRIBUTE_NAME, () -> customLongValue),
+                new CustomAttribute<>(BasicEntityFactory.STRING_ATTRIBUTE_NAME, () -> customStringValue)
         ).create();
 
         assertNull(basicEntity.getId());
@@ -95,10 +92,8 @@ class AbstractBaseEntityFactoryTest {
         final String customStringValue = "a custom string value";
 
         final List<BasicEntity> basicEntities = basicEntityFactory.withCustomAttributes(
-                Map.of(
-                        customLongName, new CustomAttribute<>(customLongName, () -> customLongValue),
-                        customStringName, new CustomAttribute<>(customStringName, () -> customStringValue)
-                )
+                new CustomAttribute<>(customLongName, () -> customLongValue),
+                new CustomAttribute<>(customStringName, () -> customStringValue)
         ).create(numberOfEntities);
 
         assertNull(basicEntities.get(0).getId());
@@ -151,10 +146,8 @@ class AbstractBaseEntityFactoryTest {
         final String customStringValue = "a custom string value";
 
         final BasicEntity basicEntity = basicEntityFactory.withCustomAttributes(
-                Map.of(
-                        customLongName, new CustomAttribute<>(customLongName, () -> customLongValue),
-                        customStringName, new CustomAttribute<>(customStringName, () -> customStringValue)
-                )
+                new CustomAttribute<>(customLongName, () -> customLongValue),
+                new CustomAttribute<>(customStringName, () -> customStringValue)
         ).persist();
 
         final List<BasicEntity> savedEntities = basicEntityRepository.findAll();
@@ -177,10 +170,8 @@ class AbstractBaseEntityFactoryTest {
         final String customStringValue = "a custom string value";
 
         final List<BasicEntity> basicEntities = basicEntityFactory.withCustomAttributes(
-                Map.of(
-                        customLongName, new CustomAttribute<>(customLongName, () -> customLongValue),
-                        customStringName, new CustomAttribute<>(customStringName, () -> customStringValue)
-                )
+                new CustomAttribute<>(customLongName, () -> customLongValue),
+                new CustomAttribute<>(customStringName, () -> customStringValue)
         ).persist(numberOfEntities);
 
         final List<BasicEntity> savedEntities = basicEntityRepository.findAll();
@@ -223,14 +214,12 @@ class AbstractBaseEntityFactoryTest {
 
         final List<EntityWithUniqueAttributes> createdEntities = entityWithUniqueAttributesFactory
                 .withCustomAttributes(
-                        Map.of(
-                                "uniqueString", new CustomAttribute<>("uniqueString", () -> {
-                                    final List<String> list = Arrays.asList("bob", "eric", "steve");
-                                    final Random rand = new Random();
+                        new CustomAttribute<>("uniqueString", () -> {
+                            final List<String> list = Arrays.asList("bob", "eric", "steve");
+                            final Random rand = new Random();
 
-                                    return list.get(rand.nextInt(list.size()));
-                                })
-                        )
+                            return list.get(rand.nextInt(list.size()));
+                        })
                 )
                 .persist(numberOfEntities);
         final List<EntityWithUniqueAttributes> savedEntities = entityWithUniqueAttributesRepository.findAll();

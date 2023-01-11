@@ -81,14 +81,11 @@ Custom attributes can be specified using the `withAttributes()` function. In the
 public class EntityCreator {
     @Autowired
     BasicEntityFactory basicEntityFactory;
-    
-    private final Map<String, CustomAttribute<?>> customAttributes = Map.of(
-            BasicEntityFactory.LONG_ATTRIBUTE_NAME,
-            new CustomAttribute<>(BasicEntityFactory.LONG_ATTRIBUTE_NAME, () -> 12L)
-    );
 
     public void CreateEntities() {
-        List<BasicEntity> basicEntity = basicEntityFactory.withAttributes(customAttributes).persist(5);
+        List<BasicEntity> basicEntity = basicEntityFactory
+                .withCustomAttributes(new CustomAttribute<>(BasicEntityFactory.LONG_ATTRIBUTE_NAME, () -> 12L))
+                .persist(5);
     }
 }
 ```
