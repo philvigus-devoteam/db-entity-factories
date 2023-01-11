@@ -44,9 +44,6 @@ public class BasicEntityFactory extends AbstractBaseEntityFactory<BasicEntity> {
 
     private static final Faker faker = new Faker();
 
-    private final String longAttributeName = "myLongAttribute";
-    private final String stringAttributeName = "myStringAttribute";
-
     public BasicEntityFactory(final JpaRepository<BasicEntity, Long> repository) {
         super(
                 BasicEntity.class, 
