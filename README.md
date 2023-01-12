@@ -180,3 +180,106 @@ public class ChildEntityFactory extends AbstractBaseEntityFactory<ChildEntity> {
     }
 }
 ```
+
+## Examples
+
+### Easily create and persist dummy users to a database
+
+```java
+@Entity
+@Getter
+@Setter
+public class NewUser {
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Long id;
+
+    private String username;
+
+    private String firstName;
+
+    private String lastName;
+
+    private String address;
+
+    private String email;
+
+    private String age;
+
+    private String phoneNumber;
+
+    @Override
+    public String toString() {
+        return "NewUser{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", address='" + address + '\'' +
+                ", email='" + email + '\'' +
+                ", age='" + age + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                '}';
+    }
+}
+```
+```java
+public interface NewUserRepository extends JpaRepository<NewUser, Long> {
+}
+```
+
+```java
+@EntityFactory
+public class NewUserFactory extends AbstractBaseEntityFactory<NewUser> {
+    private static final Faker faker = new Faker();
+
+    public NewUserFactory(final NewUserRepository repository) {
+        super(NewUser.class, repository,
+                new DefaultAttribute<>("username", () -> NewUserFactory.faker.name().username()),
+                new DefaultAttribute<>("firstName", () -> NewUserFactory.faker.name().firstName()),
+                new DefaultAttribute<>("lastName", () -> NewUserFactory.faker.name().lastName()),
+                new DefaultAttribute<>("address", () -> NewUserFactory.faker.address().fullAddress()),
+                new DefaultAttribute<>("email", () -> NewUserFactory.faker.internet().emailAddress()),
+                new DefaultAttribute<>("age", () -> NewUserFactory.faker.number().numberBetween(18, 90)),
+                new DefaultAttribute<>("phoneNumber", () -> NewUserFactory.faker.phoneNumber().cellPhone())
+        );
+    }
+}
+```
+
+```java
+public class EntityCreator {
+    @Autowired
+    NewUserFactory newUserFactory;
+
+    public void CreateEntities() {
+        List<NewUser> savedUsers = newUserFactory.persist(20);
+
+        savedUsers.forEach(System.out::println);
+    }
+}
+```
+Example output from EntityCreator:
+```
+NewUser{id=1, username='jeraldine.corkery', firstName='Earl', lastName='Ziemann', address='560 Lind Trail, Port Rogertown, SD 32013', email='tyree.nolan@hotmail.com', age='22', phoneNumber='(308) 228-8767'}
+NewUser{id=2, username='kelly.emmerich', firstName='Israel', lastName='Wuckert', address='289 Pouros Brook, Kassulkechester, AZ 29686', email='chere.howe@gmail.com', age='75', phoneNumber='(409) 919-8977'}
+NewUser{id=3, username='jacqulyn.koepp', firstName='Evelina', lastName='Wehner', address='469 Cory Vista, Mantebury, NC 11215', email='augustus.champlin@hotmail.com', age='25', phoneNumber='(970) 281-9638'}
+NewUser{id=4, username='philomena.okeefe', firstName='Kelsi', lastName='Brekke', address='35712 Kris Meadows, Port Eltonhaven, MN 32154', email='harlan.brakus@hotmail.com', age='27', phoneNumber='1-731-316-4455'}
+NewUser{id=5, username='glynis.stanton', firstName='Hong', lastName='West', address='Suite 079 9584 Bogan Throughway, Lake Magen, ND 22146', email='kristle.raynor@hotmail.com', age='69', phoneNumber='386-740-9692'}
+NewUser{id=6, username='felipa.graham', firstName='Jolynn', lastName='Smitham', address='Apt. 224 90154 Wiegand Meadows, Bartolettiville, OH 08563', email='melvin.kozey@hotmail.com', age='69', phoneNumber='1-714-563-3402'}
+NewUser{id=7, username='ike.hagenes', firstName='Tamela', lastName='Johns', address='663 Angel Villages, North Colton, SD 77125', email='harriette.lockman@hotmail.com', age='36', phoneNumber='215.808.6764'}
+NewUser{id=8, username='jeana.mclaughlin', firstName='Margarette', lastName='Hills', address='Apt. 714 683 Graham Field, Fumikohaven, TN 89943', email='mariano.sipes@yahoo.com', age='30', phoneNumber='(630) 317-8846'}
+NewUser{id=9, username='colby.schamberger', firstName='Lakenya', lastName='King', address='Suite 987 4044 Dortha Mission, Lake Leonia, CO 44427', email='jaime.wolf@yahoo.com', age='88', phoneNumber='770.828.5974'}
+NewUser{id=10, username='judson.collier', firstName='Myong', lastName='Hessel', address='7958 Matthew Plain, Rinaton, TX 96198', email='coral.berge@yahoo.com', age='45', phoneNumber='760.912.0884'}
+NewUser{id=11, username='stevie.stamm', firstName='Delmar', lastName='Aufderhar', address='Suite 036 432 Harvey Crossroad, Maragretshire, NE 68910', email='september.wolff@yahoo.com', age='42', phoneNumber='(205) 206-5994'}
+NewUser{id=12, username='grace.bruen', firstName='Trena', lastName='Klocko', address='52356 Carter Shoals, Lake Trinidadville, OR 43169', email='joe.daniel@hotmail.com', age='82', phoneNumber='903.720.0310'}
+NewUser{id=13, username='refugia.skiles', firstName='Nicki', lastName='Mueller', address='Apt. 666 13443 Forrest Extensions, Exieton, KY 33870', email='marcelo.veum@yahoo.com', age='41', phoneNumber='1-512-913-7307'}
+NewUser{id=14, username='galen.pfeffer', firstName='Truman', lastName='Olson', address='0708 Eloisa Shoal, East Paulettaberg, OK 94161', email='robt.bartoletti@hotmail.com', age='26', phoneNumber='618.557.9916'}
+NewUser{id=15, username='otha.homenick', firstName='Filiberto', lastName='Watsica', address='83276 Metz Fields, Lake Shera, MI 73280', email='clifton.bernhard@hotmail.com', age='78', phoneNumber='1-509-270-3797'}
+NewUser{id=16, username='lacey.leuschke', firstName='Hosea', lastName='Blick', address='Suite 709 58822 Crona Islands, Bethelhaven, FL 19750', email='jamison.kautzer@gmail.com', age='22', phoneNumber='901.601.3891'}
+NewUser{id=17, username='edmond.lindgren', firstName='Elvin', lastName='Renner', address='5166 Lou Rest, Zulaufhaven, CO 44269', email='tyler.farrell@yahoo.com', age='45', phoneNumber='1-941-718-1600'}
+NewUser{id=18, username='livia.hettinger', firstName='Robyn', lastName='Kassulke', address='660 Yong Ville, Port Cecilside, ID 20730', email='lorene.simonis@yahoo.com', age='40', phoneNumber='1-971-551-8499'}
+NewUser{id=19, username='bryce.hermiston', firstName='Alejandro', lastName='Moore', address='Suite 557 459 Cornell Walks, East Kyleemouth, AK 75087', email='jan.cassin@gmail.com', age='45', phoneNumber='1-947-520-4615'}
+NewUser{id=20, username='jarod.gutmann', firstName='Odell', lastName='Bosco', address='9130 Parker Estates, O'Reillyberg, AZ 18142', email='izetta.koelpin@hotmail.com', age='76', phoneNumber='339-818-3753'}
+```
+
