@@ -39,17 +39,14 @@ You define a factory as follows:
 
 @EntityFactory
 public class BasicEntityFactory extends AbstractBaseEntityFactory<BasicEntity> {
-    public static final String LONG_ATTRIBUTE_NAME = "myLongAttribute";
-    public static final String STRING_ATTRIBUTE_NAME = "myStringAttribute";
-
     private static final Faker faker = new Faker();
 
     public BasicEntityFactory(final JpaRepository<BasicEntity, Long> repository) {
         super(
                 BasicEntity.class, 
                 repository,
-                new DefaultAttribute<>(BasicEntityFactory.LONG_ATTRIBUTE_NAME, () -> BasicEntityFactory.faker.number().numberBetween(1L, 5L)),
-                new DefaultAttribute<>(BasicEntityFactory.STRING_ATTRIBUTE_NAME, () -> BasicEntityFactory.faker.lorem().sentence())
+                new DefaultAttribute<>("myLongAttribute", () -> BasicEntityFactory.faker.number().numberBetween(1L, 5L)),
+                new DefaultAttribute<>("myStringAttribute", () -> BasicEntityFactory.faker.lorem().sentence())
         );
     }
 }
@@ -75,7 +72,7 @@ public class EntityCreator {
 
 ## Overriding Default Attributes
 
-Custom attributes can be specified using the `withAttributes()` function. In the example below, each entity will have
+Custom attributes can be specified using the `withCustomAttributes()` function. In the example below, each entity will have
 `myLongAttribute` set to `12`, overriding the default attribute creation rule specified in the factory itself:
 
 ```java
@@ -85,7 +82,7 @@ public class EntityCreator {
 
     public void CreateEntities() {
         List<BasicEntity> basicEntity = basicEntityFactory
-                .withCustomAttributes(new CustomAttribute<>(BasicEntityFactory.LONG_ATTRIBUTE_NAME, () -> 12L))
+                .withCustomAttributes(new CustomAttribute<>("myLongAttribute", () -> 12L))
                 .persist(5);
     }
 }
@@ -106,9 +103,6 @@ A set number of attempts will be made to generate each unique value, after which
 
 @EntityFactory
 public class BasicEntityFactory extends AbstractBaseEntityFactory<BasicEntity> {
-    public static final String LONG_ATTRIBUTE_NAME = "myLongAttribute";
-    public static final String STRING_ATTRIBUTE_NAME = "myStringAttribute";
-
     private static final Faker faker = new Faker();
 
     public BasicEntityFactory(final JpaRepository<BasicEntity, Long> repository) {
@@ -116,8 +110,8 @@ public class BasicEntityFactory extends AbstractBaseEntityFactory<BasicEntity> {
                 BasicEntity.class,
                 repository,
                 // All myLongAttribute values are guaranteed to be unique. If this is not possible, an exception will be thrown
-                new DefaultAttribute<>(BasicEntityFactory.LONG_ATTRIBUTE_NAME, () -> AbstractBaseEntityFactory.faker.number().numberBetween(1L, 5L), true),
-                new DefaultAttribute<>(BasicEntityFactory.STRING_ATTRIBUTE_NAME, () -> AbstractBaseEntityFactory.faker.lorem().sentence())
+                new DefaultAttribute<>("myLongAttribute", () -> AbstractBaseEntityFactory.faker.number().numberBetween(1L, 5L), true),
+                new DefaultAttribute<>("myStringAttribute", () -> AbstractBaseEntityFactory.faker.lorem().sentence())
         );
     }
 }
