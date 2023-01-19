@@ -50,6 +50,7 @@ public class BasicEntityFactory extends AbstractBaseEntityFactory<BasicEntity> {
     
     // Overriding this method allows you to set up any default attribute values for entities produced by this factory
     // Entities can have fixed or, in this case, random values generated each time an entity is created
+    // If you don't override it then the entity will be produced with none of its values set
     @Override
     protected Map<String, DefaultAttribute<?>> getDefaultAttributes(AbstractBaseEntityFactory<?>... dependentFactories) {
         return toAttributeMap(
