@@ -7,12 +7,19 @@ import com.philvigus.dbentityfactories.examples.entities.NewUser;
 import com.philvigus.dbentityfactories.examples.repositories.NewUserRepository;
 import net.datafaker.Faker;
 
+import java.util.Map;
+
 @EntityFactory
 public class NewUserFactory extends AbstractBaseEntityFactory<NewUser> {
     private static final Faker faker = new Faker();
 
     public NewUserFactory(final NewUserRepository repository) {
-        super(NewUser.class, repository,
+        super(NewUser.class, repository);
+    }
+
+    @Override
+    protected Map<String, DefaultAttribute<?>> getDefaultAttributes(AbstractBaseEntityFactory<?>... dependentFactories) {
+        return toAttributeMap(
                 new DefaultAttribute<>("username", ()-> NewUserFactory.faker.name().username()),
                 new DefaultAttribute<>("firstName", () -> NewUserFactory.faker.name().firstName()),
                 new DefaultAttribute<>("lastName", () -> NewUserFactory.faker.name().lastName()),

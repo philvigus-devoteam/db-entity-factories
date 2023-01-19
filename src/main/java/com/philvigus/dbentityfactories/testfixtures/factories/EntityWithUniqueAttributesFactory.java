@@ -7,6 +7,8 @@ import com.philvigus.dbentityfactories.testfixtures.entities.EntityWithUniqueAtt
 import net.datafaker.Faker;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Map;
+
 /**
  * The entity with unique attributes factory used by tests for this library.
  */
@@ -23,12 +25,14 @@ public class EntityWithUniqueAttributesFactory extends AbstractBaseEntityFactory
      * @param repository the repository used to save instances of the entity
      */
     public EntityWithUniqueAttributesFactory(final JpaRepository<EntityWithUniqueAttributes, Long> repository) {
-        super(
-                EntityWithUniqueAttributes.class,
-                repository,
+        super(EntityWithUniqueAttributes.class, repository);
+    }
+
+    @Override
+    protected Map<String, DefaultAttribute<?>> getDefaultAttributes(AbstractBaseEntityFactory<?>... dependentFactories) {
+        return toAttributeMap(
                 new DefaultAttribute<>(EntityWithUniqueAttributesFactory.UNIQUE_ATTRIBUTE_NAME, () -> EntityWithUniqueAttributesFactory.faker.lorem().sentence(), true),
                 new DefaultAttribute<>(EntityWithUniqueAttributesFactory.NORMAL_ATTRIBUTE_NAME, () -> "This will be the same in different entities of this type")
-
         );
     }
 }

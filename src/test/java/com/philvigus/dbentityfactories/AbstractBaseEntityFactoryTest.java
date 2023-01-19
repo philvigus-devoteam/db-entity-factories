@@ -226,6 +226,7 @@ class AbstractBaseEntityFactoryTest {
 
         assertEquals(numberOfEntities, createdEntities.size());
         assertEquals(numberOfEntities, savedEntities.size());
+
         assertNotEquals(savedEntities.get(0).getUniqueString(), savedEntities.get(1).getUniqueString());
         assertNotEquals(savedEntities.get(0).getUniqueString(), savedEntities.get(1).getUniqueString());
         assertNotEquals(savedEntities.get(1).getUniqueString(), savedEntities.get(2).getUniqueString());

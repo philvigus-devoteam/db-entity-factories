@@ -7,6 +7,8 @@ import com.philvigus.dbentityfactories.testfixtures.entities.ChildEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Map;
+
 /**
  * The Child entity factory used by tests for this library.
  */
@@ -22,10 +24,14 @@ public class ChildEntityFactory extends AbstractBaseEntityFactory<ChildEntity> {
      */
     @Autowired
     public ChildEntityFactory(final JpaRepository<ChildEntity, Long> repository, ParentEntityFactory parentEntityFactory) {
-        super(
-                ChildEntity.class,
-                repository,
-                new DefaultAttribute<>(ChildEntityFactory.PARENT_ATTRIBUTE_NAME, parentEntityFactory::persist)
+        super(ChildEntity.class, repository, parentEntityFactory);
+    }
+
+    @Override
+    @Autowired
+    protected Map<String, DefaultAttribute<?>> getDefaultAttributes(AbstractBaseEntityFactory<?>... dependentFactories) {
+        return toAttributeMap(
+                new DefaultAttribute<>(ChildEntityFactory.PARENT_ATTRIBUTE_NAME, dependentFactories[0]::persist)
         );
     }
 }

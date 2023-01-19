@@ -39,14 +39,20 @@ You define a factory as follows:
 
 @EntityFactory
 public class BasicEntityFactory extends AbstractBaseEntityFactory<BasicEntity> {
+    public static final String LONG_ATTRIBUTE_NAME = "myLongAttribute";
+    public static final String STRING_ATTRIBUTE_NAME = "myStringAttribute";
+    
     private static final Faker faker = new Faker();
 
     public BasicEntityFactory(final JpaRepository<BasicEntity, Long> repository) {
-        super(
-                BasicEntity.class, 
-                repository,
-                new DefaultAttribute<>("myLongAttribute", () -> BasicEntityFactory.faker.number().numberBetween(1L, 5L)),
-                new DefaultAttribute<>("myStringAttribute", () -> BasicEntityFactory.faker.lorem().sentence())
+        super(BasicEntity.class, repository);
+    }
+
+    @Override
+    protected Map<String, DefaultAttribute<?>> getDefaultAttributes(AbstractBaseEntityFactory<?>... dependentFactories) {
+        return toAttributeMap(
+                new DefaultAttribute<>(BasicEntityFactory.LONG_ATTRIBUTE_NAME, () -> BasicEntityFactory.faker.number().numberBetween(1L, 5L)),
+                new DefaultAttribute<>(BasicEntityFactory.STRING_ATTRIBUTE_NAME, () -> BasicEntityFactory.faker.lorem().sentence())
         );
     }
 }
@@ -95,7 +101,7 @@ defaults to false.
 
 For factories to correctly handle unique attribute values, you must allow Spring Boot to manage their lifecycle by
 annotating
-the factory with `@EntityFactory`. You then use the factory with dependency injection rather its constructor.
+the factory with `@EntityFactory` and injecting instances with dependency injection.
 
 A set number of attempts will be made to generate each unique value, after which it will throw an exception:
 
@@ -103,12 +109,18 @@ A set number of attempts will be made to generate each unique value, after which
 
 @EntityFactory
 public class BasicEntityFactory extends AbstractBaseEntityFactory<BasicEntity> {
+    public static final String LONG_ATTRIBUTE_NAME = "myLongAttribute";
+    public static final String STRING_ATTRIBUTE_NAME = "myStringAttribute";
+    
     private static final Faker faker = new Faker();
 
     public BasicEntityFactory(final JpaRepository<BasicEntity, Long> repository) {
-        super(
-                BasicEntity.class,
-                repository,
+        super(BasicEntity.class, repository);
+    }
+
+    @Override
+    protected Map<String, DefaultAttribute<?>> getDefaultAttributes(AbstractBaseEntityFactory<?>... dependentFactories) {
+        return toAttributeMap(
                 // All myLongAttribute values are guaranteed to be unique. If this is not possible, an exception will be thrown
                 new DefaultAttribute<>("myLongAttribute", () -> AbstractBaseEntityFactory.faker.number().numberBetween(1L, 5L), true),
                 new DefaultAttribute<>("myStringAttribute", () -> AbstractBaseEntityFactory.faker.lorem().sentence())
@@ -120,8 +132,7 @@ public class BasicEntityFactory extends AbstractBaseEntityFactory<BasicEntity> {
 ## One-to-many and many-to-many relationships
 
 Say you have two entities, parent and child. A parent can have between zero and many children, while a child must have a
-parent.
-This type of relationship can easily be handled so that when a factory creates a child, it also creates and links to a
+parent. This type of relationship can easily be handled so that when a factory creates a child, it also creates and links to a
 child's parent entity.
 
 ```java
@@ -165,11 +176,18 @@ public class ChildEntityFactory extends AbstractBaseEntityFactory<ChildEntity> {
 
     @Autowired
     public ChildEntityFactory(final JpaRepository<ChildEntity, Long> repository, ParentEntityFactory parentEntityFactory) {
-        super(
-                ChildEntity.class,
-                repository,
-                // will automatically create and save the parent entity when the factory is used to create a child entity
-                new DefaultAttribute<>(ChildEntityFactory.PARENT_ATTRIBUTE_NAME, parentEntityFactory::create)
+        // the parent entity factory is passed in as it's needed during the creation of the child entity
+        // the constructor can handle an any number of factories being passed in here
+        super(ChildEntity.class, repository, parentEntityFactory);
+    }
+
+    @Override
+    @Autowired
+    protected Map<String, DefaultAttribute<?>> getDefaultAttributes(AbstractBaseEntityFactory<?>... dependentFactories) {
+        return toAttributeMap(
+                // grab the parent entity factory from the dependentFactories and use it to persist a parent
+                // and use it as the parent for this child entity when it is created
+                new DefaultAttribute<>(ChildEntityFactory.PARENT_ATTRIBUTE_NAME, dependentFactories[0]::persist)
         );
     }
 }
@@ -228,8 +246,13 @@ public class NewUserFactory extends AbstractBaseEntityFactory<NewUser> {
     private static final Faker faker = new Faker();
 
     public NewUserFactory(final NewUserRepository repository) {
-        super(NewUser.class, repository,
-                new DefaultAttribute<>("username", () -> NewUserFactory.faker.name().username()),
+        super(NewUser.class, repository);
+    }
+
+    @Override
+    protected Map<String, DefaultAttribute<?>> getDefaultAttributes(AbstractBaseEntityFactory<?>... dependentFactories) {
+        return toAttributeMap(
+                new DefaultAttribute<>("username", ()-> NewUserFactory.faker.name().username()),
                 new DefaultAttribute<>("firstName", () -> NewUserFactory.faker.name().firstName()),
                 new DefaultAttribute<>("lastName", () -> NewUserFactory.faker.name().lastName()),
                 new DefaultAttribute<>("address", () -> NewUserFactory.faker.address().fullAddress()),

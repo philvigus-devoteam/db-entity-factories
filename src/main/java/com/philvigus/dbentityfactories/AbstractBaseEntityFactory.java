@@ -45,24 +45,46 @@ public abstract class AbstractBaseEntityFactory<T> {
     /**
      * Instantiates a new Abstract base entity factory.
      *
-     * @param entityClass       the entity class
-     * @param repository        the repository used to save instances of the entity
-     * @param defaultAttributes the entity's default attributes
+     * @param entityClass        the entity class
+     * @param repository         the repository used to save instances of the entity
+     * @param dependentFactories any factories the creation of this entity depends on
      */
     protected AbstractBaseEntityFactory(
             final Class<T> entityClass,
             final JpaRepository<T, Long> repository,
-            final DefaultAttribute<?>... defaultAttributes) {
+            AbstractBaseEntityFactory<?>... dependentFactories) {
         this.entityClass = entityClass;
         this.repository = repository;
 
-        this.defaultAttributes = new ConcurrentHashMap<>();
+        this.customAttributes = new ConcurrentHashMap<>();
+        this.defaultAttributes = getDefaultAttributes(dependentFactories);
+    }
 
-        for (DefaultAttribute<?> defaultAttribute : defaultAttributes) {
-            this.defaultAttributes.put(defaultAttribute.getName(), defaultAttribute);
+    /**
+     * Gets the default attributes for the entity created by this factory.
+     *
+     * @param dependentFactories any factories the creation of this entity depends on
+     * @return the default attributes
+     */
+    protected Map<String, DefaultAttribute<?>> getDefaultAttributes(AbstractBaseEntityFactory<?>... dependentFactories) {
+        return Map.of();
+    }
+
+    /**
+     * Converts a list of default attributes to a map, with the keys being the name of each attribute
+     * and the values being the attributes themselves.
+     *
+     * @param attributes the default attributes
+     * @return the attribute map
+     */
+    protected Map<String, DefaultAttribute<?>> toAttributeMap(DefaultAttribute<?> ...attributes) {
+        Map<String, DefaultAttribute<?>> newDefaultAttributes = new ConcurrentHashMap<>();
+
+        for (DefaultAttribute<?> defaultAttribute : attributes) {
+            newDefaultAttributes.put(defaultAttribute.getName(), defaultAttribute);
         }
 
-        this.customAttributes = new ConcurrentHashMap<>();
+        return newDefaultAttributes;
     }
 
     /**
