@@ -23,7 +23,7 @@ public class ParentEntity {
     private List<ChildEntity> children = new ArrayList<>();
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
@@ -32,7 +32,7 @@ public class ParentEntity {
             return false;
         }
 
-        ParentEntity that = (ParentEntity) o;
+        final ParentEntity that = (ParentEntity) o;
 
         return Objects.equals(id, that.id) && Objects.equals(this.getChildren(), that.getChildren());
     }
@@ -42,7 +42,7 @@ public class ParentEntity {
         return Objects.hash(id, children);
     }
 
-    public void addChild(ChildEntity childEntity) {
+    public void addChild(final ChildEntity childEntity) {
         this.children.add(childEntity);
 
         childEntity.setParent(this);

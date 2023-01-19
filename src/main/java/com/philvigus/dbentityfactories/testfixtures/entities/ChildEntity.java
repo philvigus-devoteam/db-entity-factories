@@ -22,7 +22,7 @@ public class ChildEntity {
     private ParentEntity parent;
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
@@ -31,7 +31,7 @@ public class ChildEntity {
             return false;
         }
 
-        ChildEntity that = (ChildEntity) o;
+        final ChildEntity that = (ChildEntity) o;
 
         return Objects.equals(id, that.id) && Objects.equals(this.getParent(), that.getParent());
     }

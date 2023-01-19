@@ -23,13 +23,13 @@ public class ChildEntityFactory extends AbstractBaseEntityFactory<ChildEntity> {
      * @param parentEntityFactory the parent entity factory used to create the child's parent entity
      */
     @Autowired
-    public ChildEntityFactory(final JpaRepository<ChildEntity, Long> repository, ParentEntityFactory parentEntityFactory) {
+    public ChildEntityFactory(final JpaRepository<ChildEntity, Long> repository, final ParentEntityFactory parentEntityFactory) {
         super(ChildEntity.class, repository, parentEntityFactory);
     }
 
     @Override
     @Autowired
-    protected Map<String, DefaultAttribute<?>> getDefaultAttributes(AbstractBaseEntityFactory<?>... dependentFactories) {
+    protected Map<String, DefaultAttribute<?>> getDefaultAttributes(final AbstractBaseEntityFactory<?>... dependentFactories) {
         return toAttributeMap(
                 new DefaultAttribute<>(ChildEntityFactory.PARENT_ATTRIBUTE_NAME, dependentFactories[0]::persist)
         );

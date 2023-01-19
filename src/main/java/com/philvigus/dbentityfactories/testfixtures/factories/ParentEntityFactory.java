@@ -25,7 +25,7 @@ public class ParentEntityFactory extends AbstractBaseEntityFactory<ParentEntity>
     }
 
     @Override
-    protected Map<String, DefaultAttribute<?>> getDefaultAttributes(AbstractBaseEntityFactory<?>... dependentFactories) {
+    protected Map<String, DefaultAttribute<?>> getDefaultAttributes(final AbstractBaseEntityFactory<?>... dependentFactories) {
         return toAttributeMap(
                 new DefaultAttribute<>(ParentEntityFactory.STRING_ATTRIBUTE_NAME, () -> "string value")
         );

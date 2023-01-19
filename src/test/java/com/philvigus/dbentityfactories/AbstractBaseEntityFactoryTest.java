@@ -234,10 +234,10 @@ class AbstractBaseEntityFactoryTest {
 
     @Test
     void parentEntitiesAreCreatedAutomaticallyWhenChildEntitiesHaveAManyToOneRelationship() {
-        ChildEntity childEntity = childEntityFactory.persist();
+        final ChildEntity childEntity = childEntityFactory.persist();
 
-        List<ParentEntity> savedParentEntities = parentEntityRepository.findAll();
-        List<ChildEntity> childEntities = childEntityRepository.findAll();
+        final List<ParentEntity> savedParentEntities = parentEntityRepository.findAll();
+        final List<ChildEntity> childEntities = childEntityRepository.findAll();
 
         assertEquals(1, savedParentEntities.size());
         assertEquals(1, childEntities.size());

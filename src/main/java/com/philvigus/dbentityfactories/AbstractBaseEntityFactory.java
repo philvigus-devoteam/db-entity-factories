@@ -52,7 +52,7 @@ public abstract class AbstractBaseEntityFactory<T> {
     protected AbstractBaseEntityFactory(
             final Class<T> entityClass,
             final JpaRepository<T, Long> repository,
-            AbstractBaseEntityFactory<?>... dependentFactories) {
+            final AbstractBaseEntityFactory<?>... dependentFactories) {
         this.entityClass = entityClass;
         this.repository = repository;
 
@@ -66,7 +66,7 @@ public abstract class AbstractBaseEntityFactory<T> {
      * @param dependentFactories any factories the creation of this entity depends on
      * @return the default attributes
      */
-    protected Map<String, DefaultAttribute<?>> getDefaultAttributes(AbstractBaseEntityFactory<?>... dependentFactories) {
+    protected Map<String, DefaultAttribute<?>> getDefaultAttributes(final AbstractBaseEntityFactory<?>... dependentFactories) {
         return Map.of();
     }
 
@@ -77,10 +77,10 @@ public abstract class AbstractBaseEntityFactory<T> {
      * @param attributes the default attributes
      * @return the attribute map
      */
-    protected Map<String, DefaultAttribute<?>> toAttributeMap(DefaultAttribute<?> ...attributes) {
-        Map<String, DefaultAttribute<?>> newDefaultAttributes = new ConcurrentHashMap<>();
+    protected Map<String, DefaultAttribute<?>> toAttributeMap(final DefaultAttribute<?> ...attributes) {
+        final Map<String, DefaultAttribute<?>> newDefaultAttributes = new ConcurrentHashMap<>();
 
-        for (DefaultAttribute<?> defaultAttribute : attributes) {
+        for (final DefaultAttribute<?> defaultAttribute : attributes) {
             newDefaultAttributes.put(defaultAttribute.getName(), defaultAttribute);
         }
 
@@ -149,7 +149,7 @@ public abstract class AbstractBaseEntityFactory<T> {
      * @return the abstract base entity factory using the custom attributes
      */
     public AbstractBaseEntityFactory<T> withCustomAttributes(final CustomAttribute<?>... customAttributes) {
-        for (CustomAttribute<?> customAttribute : customAttributes) {
+        for (final CustomAttribute<?> customAttribute : customAttributes) {
             this.customAttributes.put(customAttribute.getName(), customAttribute);
         }
 

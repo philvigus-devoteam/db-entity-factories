@@ -18,7 +18,7 @@ public class NewUserFactory extends AbstractBaseEntityFactory<NewUser> {
     }
 
     @Override
-    protected Map<String, DefaultAttribute<?>> getDefaultAttributes(AbstractBaseEntityFactory<?>... dependentFactories) {
+    protected Map<String, DefaultAttribute<?>> getDefaultAttributes(final AbstractBaseEntityFactory<?>... dependentFactories) {
         return toAttributeMap(
                 new DefaultAttribute<>("username", ()-> NewUserFactory.faker.name().username()),
                 new DefaultAttribute<>("firstName", () -> NewUserFactory.faker.name().firstName()),

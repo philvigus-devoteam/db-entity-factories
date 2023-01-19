@@ -52,10 +52,18 @@ public class BasicEntityFactory extends AbstractBaseEntityFactory<BasicEntity> {
     // Entities can have fixed or, in this case, random values generated each time an entity is created
     // If you don't override it then the entity will be produced with none of its values set
     @Override
-    protected Map<String, DefaultAttribute<?>> getDefaultAttributes(AbstractBaseEntityFactory<?>... dependentFactories) {
+    protected Map<String, DefaultAttribute<?>> getDefaultAttributes(
+            AbstractBaseEntityFactory<?>... dependentFactories
+    ) {
         return toAttributeMap(
-                new DefaultAttribute<>(BasicEntityFactory.LONG_ATTRIBUTE_NAME, () -> BasicEntityFactory.faker.number().numberBetween(1L, 5L)),
-                new DefaultAttribute<>(BasicEntityFactory.STRING_ATTRIBUTE_NAME, () -> BasicEntityFactory.faker.lorem().sentence())
+                new DefaultAttribute<>(
+                        BasicEntityFactory.LONG_ATTRIBUTE_NAME,
+                        () -> BasicEntityFactory.faker.number().numberBetween(1L, 5L)
+                ),
+                new DefaultAttribute<>(
+                        BasicEntityFactory.STRING_ATTRIBUTE_NAME,
+                        () -> BasicEntityFactory.faker.lorem().sentence()
+                )
         );
     }
 }
@@ -122,11 +130,19 @@ public class BasicEntityFactory extends AbstractBaseEntityFactory<BasicEntity> {
     }
 
     @Override
-    protected Map<String, DefaultAttribute<?>> getDefaultAttributes(AbstractBaseEntityFactory<?>... dependentFactories) {
+    protected Map<String, DefaultAttribute<?>> getDefaultAttributes(
+            AbstractBaseEntityFactory<?>... dependentFactories
+    ) {
         return toAttributeMap(
                 // All myLongAttribute values are guaranteed to be unique. If this is not possible, an exception will be thrown
-                new DefaultAttribute<>("myLongAttribute", () -> AbstractBaseEntityFactory.faker.number().numberBetween(1L, 5L), true),
-                new DefaultAttribute<>("myStringAttribute", () -> AbstractBaseEntityFactory.faker.lorem().sentence())
+                new DefaultAttribute<>(
+                        BasicEntityFactory.LONG_ATTRIBUTE_NAME,
+                        () -> AbstractBaseEntityFactory.faker.number().numberBetween(1L, 5L), true
+                ),
+                new DefaultAttribute<>(
+                        BasicEntityFactory.STRING_ATTRIBUTE_NAME,
+                        () -> AbstractBaseEntityFactory.faker.lorem().sentence()
+                )
         );
     }
 }
@@ -178,7 +194,10 @@ public class ChildEntityFactory extends AbstractBaseEntityFactory<ChildEntity> {
     public static final String PARENT_ATTRIBUTE_NAME = "parent";
 
     @Autowired
-    public ChildEntityFactory(final JpaRepository<ChildEntity, Long> repository, ParentEntityFactory parentEntityFactory) {
+    public ChildEntityFactory(
+            final JpaRepository<ChildEntity, Long> repository,
+            final ParentEntityFactory parentEntityFactory
+    ) {
         // the parent entity factory is passed in as it's needed during the creation of the child entity
         // the constructor can handle an any number of factories being passed in here
         super(ChildEntity.class, repository, parentEntityFactory);
@@ -186,7 +205,9 @@ public class ChildEntityFactory extends AbstractBaseEntityFactory<ChildEntity> {
 
     @Override
     @Autowired
-    protected Map<String, DefaultAttribute<?>> getDefaultAttributes(AbstractBaseEntityFactory<?>... dependentFactories) {
+    protected Map<String, DefaultAttribute<?>> getDefaultAttributes(
+            AbstractBaseEntityFactory<?>... dependentFactories
+    ) {
         return toAttributeMap(
                 // grab the parent entity factory from the dependentFactories and use it to persist a parent
                 // and use it as the parent for this child entity when it is created
@@ -253,7 +274,9 @@ public class NewUserFactory extends AbstractBaseEntityFactory<NewUser> {
     }
 
     @Override
-    protected Map<String, DefaultAttribute<?>> getDefaultAttributes(AbstractBaseEntityFactory<?>... dependentFactories) {
+    protected Map<String, DefaultAttribute<?>> getDefaultAttributes(
+            AbstractBaseEntityFactory<?>... dependentFactories
+    ) {
         return toAttributeMap(
                 new DefaultAttribute<>("username", ()-> NewUserFactory.faker.name().username()),
                 new DefaultAttribute<>("firstName", () -> NewUserFactory.faker.name().firstName()),

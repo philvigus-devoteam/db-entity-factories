@@ -28,7 +28,7 @@ public class EntityWithUniqueAttributes {
     private Long repeatableLong;
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
@@ -37,7 +37,7 @@ public class EntityWithUniqueAttributes {
             return false;
         }
 
-        EntityWithUniqueAttributes that = (EntityWithUniqueAttributes) o;
+        final EntityWithUniqueAttributes that = (EntityWithUniqueAttributes) o;
 
         return Objects.equals(that.getId(), this.getId())
                 && Objects.equals(this.getUniqueString(), that.getUniqueString())

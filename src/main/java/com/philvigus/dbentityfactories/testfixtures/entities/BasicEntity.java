@@ -25,7 +25,7 @@ public class BasicEntity {
     private String myStringAttribute;
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
@@ -34,7 +34,7 @@ public class BasicEntity {
             return false;
         }
 
-        BasicEntity that = (BasicEntity) o;
+        final BasicEntity that = (BasicEntity) o;
 
         return Objects.equals(that.getId(), this.getId())
                 && Objects.equals(that.getMyLongAttribute(), this.getMyLongAttribute())

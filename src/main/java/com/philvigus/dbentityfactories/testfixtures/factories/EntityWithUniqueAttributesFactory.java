@@ -29,7 +29,7 @@ public class EntityWithUniqueAttributesFactory extends AbstractBaseEntityFactory
     }
 
     @Override
-    protected Map<String, DefaultAttribute<?>> getDefaultAttributes(AbstractBaseEntityFactory<?>... dependentFactories) {
+    protected Map<String, DefaultAttribute<?>> getDefaultAttributes(final AbstractBaseEntityFactory<?>... dependentFactories) {
         return toAttributeMap(
                 new DefaultAttribute<>(EntityWithUniqueAttributesFactory.UNIQUE_ATTRIBUTE_NAME, () -> EntityWithUniqueAttributesFactory.faker.lorem().sentence(), true),
                 new DefaultAttribute<>(EntityWithUniqueAttributesFactory.NORMAL_ATTRIBUTE_NAME, () -> "This will be the same in different entities of this type")
