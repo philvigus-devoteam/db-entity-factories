@@ -28,7 +28,6 @@ public class ChildEntityFactory extends AbstractBaseEntityFactory<ChildEntity> {
     }
 
     @Override
-    @Autowired
     protected Map<String, DefaultAttribute<?>> getDefaultAttributes(final AbstractBaseEntityFactory<?>... dependentFactories) {
         return toAttributeMap(
                 new DefaultAttribute<>(ChildEntityFactory.PARENT_ATTRIBUTE_NAME, dependentFactories[0]::persist)

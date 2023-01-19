@@ -14,6 +14,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.IntStream;
 
 import static org.apache.commons.beanutils.BeanUtils.setProperty;
+import static org.apache.commons.beanutils.PropertyUtils.isReadable;
+import static org.apache.commons.beanutils.PropertyUtils.isWriteable;
 
 /**
  * The abstract base entity factory.
@@ -238,6 +240,11 @@ public abstract class AbstractBaseEntityFactory<T> {
      * @param value  the attribute value
      */
     protected void setEntityAttribute(final T entity, final String name, final Object value) {
+        if (!propertyExists(entity, name)) {
+            throw new EntityFactoryException(
+                    String.format("Property %s does not exist on entity of type %s", name, entityClass));
+        }
+
         try {
             setProperty(entity, name, value);
         } catch (IllegalAccessException | InvocationTargetException e) {
@@ -265,5 +272,9 @@ public abstract class AbstractBaseEntityFactory<T> {
         } while (defaultAttributes.get(customAttribute.getName()).hasUsedValue(customValue));
 
         return customValue;
+    }
+
+    private boolean propertyExists(Object entity, String propertyName) {
+        return isReadable(entity, propertyName) && isWriteable(entity, propertyName);
     }
 }

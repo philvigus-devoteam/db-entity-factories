@@ -154,6 +154,8 @@ parent. This type of relationship can easily be set up so that when a factory cr
 child's parent entity.
 
 ```java
+import org.springframework.beans.factory.annotation.Autowired;
+
 public class ParentEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -183,6 +185,7 @@ public class ChildEntity {
 public class ParentEntityFactory extends AbstractBaseEntityFactory<ParentEntity> {
     public static final String STRING_ATTRIBUTE_NAME = "stringAttribute";
 
+    @Autowired
     public ParentEntityFactory(final JpaRepository<ParentEntity, Long> repository) {
         super(ParentEntity.class, repository);
     }
@@ -203,13 +206,12 @@ public class ChildEntityFactory extends AbstractBaseEntityFactory<ChildEntity> {
     }
 
     @Override
-    @Autowired
     protected Map<String, DefaultAttribute<?>> getDefaultAttributes(
             AbstractBaseEntityFactory<?>... dependentFactories
     ) {
         return toAttributeMap(
-                // grab the parent entity factory from the dependentFactories and use it to persist a parent
-                // and use it as the parent for this child entity when it is created
+                // grab the parent entity factory from the dependentFactories and use it to persist a parent.
+                // Then use that as the parent for this child entity when it is created
                 new DefaultAttribute<>(ChildEntityFactory.PARENT_ATTRIBUTE_NAME, dependentFactories[0]::persist)
         );
     }

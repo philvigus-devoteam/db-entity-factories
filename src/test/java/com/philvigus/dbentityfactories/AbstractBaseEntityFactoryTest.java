@@ -1,11 +1,13 @@
 package com.philvigus.dbentityfactories;
 
 import com.philvigus.dbentityfactories.attributes.CustomAttribute;
+import com.philvigus.dbentityfactories.exceptions.EntityFactoryException;
 import com.philvigus.dbentityfactories.testfixtures.entities.BasicEntity;
 import com.philvigus.dbentityfactories.testfixtures.entities.ChildEntity;
 import com.philvigus.dbentityfactories.testfixtures.entities.EntityWithUniqueAttributes;
 import com.philvigus.dbentityfactories.testfixtures.entities.ParentEntity;
 import com.philvigus.dbentityfactories.testfixtures.factories.BasicEntityFactory;
+import com.philvigus.dbentityfactories.testfixtures.factories.BrokenBasicEntityFactory;
 import com.philvigus.dbentityfactories.testfixtures.factories.ChildEntityFactory;
 import com.philvigus.dbentityfactories.testfixtures.factories.EntityWithUniqueAttributesFactory;
 import com.philvigus.dbentityfactories.testfixtures.repositories.BasicEntityRepository;
@@ -45,6 +47,8 @@ class AbstractBaseEntityFactoryTest {
 
     @Autowired
     ChildEntityRepository childEntityRepository;
+    @Autowired
+    BrokenBasicEntityFactory brokenBasicEntityFactory;
     @Autowired
     private ParentEntityRepository parentEntityRepository;
 
@@ -242,6 +246,21 @@ class AbstractBaseEntityFactoryTest {
         assertEquals(1, savedParentEntities.size());
         assertEquals(1, childEntities.size());
         assertEquals(savedParentEntities.get(0).getId(), childEntity.getParent().getId());
+    }
+
+    @Test
+    void specifyingADefaultAttributeWithANameThatDoesntExistOnAnEntityThrowsAnException() {
+        final String incorrectAttributeName = "I do not exist";
+        final Long customLongValue = 999L;
+
+        assertThrows(EntityFactoryException.class, () -> basicEntityFactory.withCustomAttributes(
+                new CustomAttribute<>(incorrectAttributeName, () -> customLongValue)
+        ).create());
+    }
+
+    @Test
+    void specifyingACustomAttributeWithANameThatDoesntExistOnAnEntityThrowsAnException() {
+        assertThrows(EntityFactoryException.class, () -> brokenBasicEntityFactory.persist());
     }
 
     void assertBasicEntityCorrectlyMadeWithDefaultAttributes(final BasicEntity basicEntity) {
