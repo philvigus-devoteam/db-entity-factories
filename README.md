@@ -111,8 +111,7 @@ The uniqueness of an attribute is specified by the third parameter to the attrib
 defaults to false.
 
 For factories to correctly handle unique attribute values, you must allow Spring Boot to manage their lifecycle by
-annotating
-the factory with `@EntityFactory` and injecting instances with dependency injection.
+annotating the factory with `@EntityFactory` and injecting instances with dependency injection.
 
 A set number of attempts will be made to generate each unique value, after which it will throw an exception:
 
@@ -151,7 +150,7 @@ public class BasicEntityFactory extends AbstractBaseEntityFactory<BasicEntity> {
 ## One-to-many and many-to-many relationships
 
 Say you have two entities, parent and child. A parent can have between zero and many children, while a child must have a
-parent. This type of relationship can easily be handled so that when a factory creates a child, it also creates and links to a
+parent. This type of relationship can easily be set up so that when a factory creates a child, it also creates and links to a
 child's parent entity.
 
 ```java
@@ -199,7 +198,7 @@ public class ChildEntityFactory extends AbstractBaseEntityFactory<ChildEntity> {
             final ParentEntityFactory parentEntityFactory
     ) {
         // the parent entity factory is passed in as it's needed during the creation of the child entity
-        // the constructor can handle an any number of factories being passed in here
+        // the constructor can handle any number of factories being passed in here
         super(ChildEntity.class, repository, parentEntityFactory);
     }
 
