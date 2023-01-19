@@ -47,7 +47,9 @@ public class BasicEntityFactory extends AbstractBaseEntityFactory<BasicEntity> {
     public BasicEntityFactory(final JpaRepository<BasicEntity, Long> repository) {
         super(BasicEntity.class, repository);
     }
-
+    
+    // Overriding this method allows you to set up any default attribute values for entities produced by this factory
+    // Entities can have fixed or, in this case random values generated each time an entity is created
     @Override
     protected Map<String, DefaultAttribute<?>> getDefaultAttributes(AbstractBaseEntityFactory<?>... dependentFactories) {
         return toAttributeMap(
