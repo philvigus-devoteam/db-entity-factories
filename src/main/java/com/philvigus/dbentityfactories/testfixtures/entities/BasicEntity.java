@@ -27,7 +27,7 @@ public class BasicEntity {
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
-            return true;
+                return true;
         }
 
         if (o == null || getClass() != o.getClass()) {

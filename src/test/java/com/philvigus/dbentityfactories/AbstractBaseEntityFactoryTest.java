@@ -6,10 +6,7 @@ import com.philvigus.dbentityfactories.testfixtures.entities.BasicEntity;
 import com.philvigus.dbentityfactories.testfixtures.entities.ChildEntity;
 import com.philvigus.dbentityfactories.testfixtures.entities.EntityWithUniqueAttributes;
 import com.philvigus.dbentityfactories.testfixtures.entities.ParentEntity;
-import com.philvigus.dbentityfactories.testfixtures.factories.BasicEntityFactory;
-import com.philvigus.dbentityfactories.testfixtures.factories.BrokenBasicEntityFactory;
-import com.philvigus.dbentityfactories.testfixtures.factories.ChildEntityFactory;
-import com.philvigus.dbentityfactories.testfixtures.factories.EntityWithUniqueAttributesFactory;
+import com.philvigus.dbentityfactories.testfixtures.factories.*;
 import com.philvigus.dbentityfactories.testfixtures.repositories.BasicEntityRepository;
 import com.philvigus.dbentityfactories.testfixtures.repositories.ChildEntityRepository;
 import com.philvigus.dbentityfactories.testfixtures.repositories.EntityWithUniqueAttributesRepository;
@@ -49,6 +46,10 @@ class AbstractBaseEntityFactoryTest {
     ChildEntityRepository childEntityRepository;
     @Autowired
     BrokenBasicEntityFactory brokenBasicEntityFactory;
+
+    @Autowired
+    EntityForClearingValuesTestFactory entityForClearingValuesTestFactory;
+
     @Autowired
     private ParentEntityRepository parentEntityRepository;
 
@@ -261,6 +262,31 @@ class AbstractBaseEntityFactoryTest {
     @Test
     void specifyingACustomAttributeWithANameThatDoesntExistOnAnEntityThrowsAnException() {
         assertThrows(EntityFactoryException.class, () -> brokenBasicEntityFactory.persist());
+    }
+
+    @Test
+    void youCanResetTheUsedValuesOnAllAttributes() {
+        entityForClearingValuesTestFactory.create();
+
+        entityForClearingValuesTestFactory.clearAllUsedAttributeValues();
+
+        assertDoesNotThrow(() -> entityForClearingValuesTestFactory.create());
+    }
+
+    @Test
+    void youCanResetTheUsedValuesOnSpecificAttribute() {
+        entityForClearingValuesTestFactory.create();
+
+        entityForClearingValuesTestFactory.clearUsedValuesForAttribute(EntityForClearingValuesTestFactory.UNIQUE_LONG);
+
+        assertDoesNotThrow(() -> entityForClearingValuesTestFactory
+                .withCustomAttributes(new CustomAttribute<>(
+                        EntityForClearingValuesTestFactory.UNIQUE_STRING,
+                        ()-> "a different value"))
+                .create());
+
+        assertThrows(EntityFactoryException.class,() -> entityForClearingValuesTestFactory.create());
+
     }
 
     void assertBasicEntityCorrectlyMadeWithDefaultAttributes(final BasicEntity basicEntity) {

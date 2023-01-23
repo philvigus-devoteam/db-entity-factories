@@ -90,6 +90,13 @@ public class DefaultAttribute<T> extends AbstractBaseAttribute<T> {
         return isUnique() ? getUniqueValue() : valueSupplier.get();
     }
 
+    /**
+     * Clears the list of values used for this entity.
+     */
+    public void clearUsedValues() {
+        usedValues.clear();
+    }
+
     private T getUniqueValue() {
         T value;
         int attempts = 0;

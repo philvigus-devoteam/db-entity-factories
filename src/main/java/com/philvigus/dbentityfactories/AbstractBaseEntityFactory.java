@@ -158,6 +158,14 @@ public abstract class AbstractBaseEntityFactory<T> {
         return this;
     }
 
+    public void clearAllUsedAttributeValues() {
+        defaultAttributes.forEach((attributeName, defaultAttribute) -> defaultAttribute.clearUsedValues());
+    }
+
+    public void clearUsedValuesForAttribute(String attributeName) {
+        defaultAttributes.get(attributeName).clearUsedValues();
+    }
+
     /**
      * Gets an entity with attributes set.
      *
