@@ -1,4 +1,4 @@
-package com.philvigus.dbentityfactories;
+package com.philvigus.dbentityfactories.factories;
 
 import com.philvigus.dbentityfactories.attributes.CustomAttribute;
 import com.philvigus.dbentityfactories.exceptions.EntityFactoryException;

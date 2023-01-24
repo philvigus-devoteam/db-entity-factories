@@ -1,10 +1,10 @@
 package com.philvigus.dbentityfactories.examples.factories;
 
-import com.philvigus.dbentityfactories.AbstractBaseEntityFactory;
 import com.philvigus.dbentityfactories.annotations.EntityFactory;
 import com.philvigus.dbentityfactories.attributes.DefaultAttribute;
 import com.philvigus.dbentityfactories.examples.entities.NewUser;
 import com.philvigus.dbentityfactories.examples.repositories.NewUserRepository;
+import com.philvigus.dbentityfactories.factories.AbstractBaseEntityFactory;
 import net.datafaker.Faker;
 
 import java.util.Map;

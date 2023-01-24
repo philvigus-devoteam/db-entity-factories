@@ -1,8 +1,8 @@
 package com.philvigus.dbentityfactories.testfixtures.factories;
 
-import com.philvigus.dbentityfactories.AbstractBaseEntityFactory;
 import com.philvigus.dbentityfactories.annotations.EntityFactory;
 import com.philvigus.dbentityfactories.attributes.DefaultAttribute;
+import com.philvigus.dbentityfactories.factories.AbstractBaseEntityFactory;
 import com.philvigus.dbentityfactories.testfixtures.entities.BasicEntity;
 import net.datafaker.Faker;
 import org.springframework.data.jpa.repository.JpaRepository;
