@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  *
  * @param <T> the type of the entity the factory creates
  */
-public abstract class HibernateEntityFactory<T> extends BaseEntityFactory<T> {
+public class HibernateEntityFactory<T> extends BaseEntityFactory<T> {
     /**
      * The repository used to save instances of the entity.
      */
@@ -23,7 +23,7 @@ public abstract class HibernateEntityFactory<T> extends BaseEntityFactory<T> {
     protected HibernateEntityFactory(
             final Class<T> entityClass,
             final JpaRepository<T, Long> repository,
-            final HibernateEntityFactory<?>... dependentFactories) {
+            final BaseEntityFactory<?>... dependentFactories) {
         super(entityClass, dependentFactories);
 
         this.repository = repository;
