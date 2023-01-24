@@ -10,6 +10,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Component
+@Inherited
 public @interface EntityFactory {
     /**
      * A convenience annotation used to mark
