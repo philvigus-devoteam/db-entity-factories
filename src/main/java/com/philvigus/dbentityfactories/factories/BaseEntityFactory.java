@@ -18,11 +18,11 @@ import static org.apache.commons.beanutils.PropertyUtils.isReadable;
 import static org.apache.commons.beanutils.PropertyUtils.isWriteable;
 
 /**
- * The abstract base entity factory.
+ * The base entity factory.
  *
  * @param <T> the type of the entity the factory creates
  */
-public abstract class AbstractBaseEntityFactory<T> {
+public abstract class BaseEntityFactory<T> {
 
     /**
      * The class of the entity the factory creates.
@@ -45,16 +45,16 @@ public abstract class AbstractBaseEntityFactory<T> {
     protected Map<String, DefaultAttribute<?>> defaultAttributes;
 
     /**
-     * Instantiates a new Abstract base entity factory.
+     * Instantiates a new base entity factory.
      *
      * @param entityClass        the entity class
      * @param repository         the repository used to save instances of the entity
      * @param dependentFactories any factories the creation of this entity depends on
      */
-    protected AbstractBaseEntityFactory(
+    protected BaseEntityFactory(
             final Class<T> entityClass,
             final JpaRepository<T, Long> repository,
-            final AbstractBaseEntityFactory<?>... dependentFactories) {
+            final BaseEntityFactory<?>... dependentFactories) {
         this.entityClass = entityClass;
         this.repository = repository;
 
@@ -68,7 +68,7 @@ public abstract class AbstractBaseEntityFactory<T> {
      * @param dependentFactories any factories the creation of this entity depends on
      * @return the default attributes
      */
-    protected Map<String, DefaultAttribute<?>> getDefaultAttributes(final AbstractBaseEntityFactory<?>... dependentFactories) {
+    protected Map<String, DefaultAttribute<?>> getDefaultAttributes(final BaseEntityFactory<?>... dependentFactories) {
         return Map.of();
     }
 
@@ -79,7 +79,7 @@ public abstract class AbstractBaseEntityFactory<T> {
      * @param attributes the default attributes
      * @return the attribute map
      */
-    protected Map<String, DefaultAttribute<?>> toAttributeMap(final DefaultAttribute<?> ...attributes) {
+    protected Map<String, DefaultAttribute<?>> toAttributeMap(final DefaultAttribute<?>... attributes) {
         final Map<String, DefaultAttribute<?>> newDefaultAttributes = new ConcurrentHashMap<>();
 
         for (final DefaultAttribute<?> defaultAttribute : attributes) {
@@ -148,9 +148,9 @@ public abstract class AbstractBaseEntityFactory<T> {
      * Allows the user to specify custom attributes to override the defaults with.
      *
      * @param customAttributes the custom attributes to use
-     * @return the abstract base entity factory using the custom attributes
+     * @return the base entity factory using the custom attributes
      */
-    public AbstractBaseEntityFactory<T> withCustomAttributes(final CustomAttribute<?>... customAttributes) {
+    public BaseEntityFactory<T> withCustomAttributes(final CustomAttribute<?>... customAttributes) {
         for (final CustomAttribute<?> customAttribute : customAttributes) {
             this.customAttributes.put(customAttribute.getName(), customAttribute);
         }

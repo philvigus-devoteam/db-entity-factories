@@ -4,13 +4,13 @@ import com.philvigus.dbentityfactories.annotations.EntityFactory;
 import com.philvigus.dbentityfactories.attributes.DefaultAttribute;
 import com.philvigus.dbentityfactories.examples.entities.NewUser;
 import com.philvigus.dbentityfactories.examples.repositories.NewUserRepository;
-import com.philvigus.dbentityfactories.factories.AbstractBaseEntityFactory;
+import com.philvigus.dbentityfactories.factories.BaseEntityFactory;
 import net.datafaker.Faker;
 
 import java.util.Map;
 
 @EntityFactory
-public class NewUserFactory extends AbstractBaseEntityFactory<NewUser> {
+public class NewUserFactory extends BaseEntityFactory<NewUser> {
     private static final Faker faker = new Faker();
 
     public NewUserFactory(final NewUserRepository repository) {
@@ -18,9 +18,9 @@ public class NewUserFactory extends AbstractBaseEntityFactory<NewUser> {
     }
 
     @Override
-    protected Map<String, DefaultAttribute<?>> getDefaultAttributes(final AbstractBaseEntityFactory<?>... dependentFactories) {
+    protected Map<String, DefaultAttribute<?>> getDefaultAttributes(final BaseEntityFactory<?>... dependentFactories) {
         return toAttributeMap(
-                new DefaultAttribute<>("username", ()-> NewUserFactory.faker.name().username()),
+                new DefaultAttribute<>("username", () -> NewUserFactory.faker.name().username()),
                 new DefaultAttribute<>("firstName", () -> NewUserFactory.faker.name().firstName()),
                 new DefaultAttribute<>("lastName", () -> NewUserFactory.faker.name().lastName()),
                 new DefaultAttribute<>("address", () -> NewUserFactory.faker.address().fullAddress()),

@@ -7,7 +7,7 @@ import java.util.function.Supplier;
  *
  * @param <T> The type of the attribute
  */
-public abstract class AbstractBaseAttribute<T> {
+public abstract class BaseAttribute<T> {
 
     /**
      * Called whenever an attribute is used as part of a factory to generate the attribute's value.
@@ -20,12 +20,12 @@ public abstract class AbstractBaseAttribute<T> {
     protected final String name;
 
     /**
-     * Instantiates a new abstract base attribute.
+     * Instantiates a new base attribute.
      *
      * @param name          the attribute name
      * @param valueSupplier the value supplier used to generate the value of the attribute
      */
-    protected AbstractBaseAttribute(final String name, final Supplier<T> valueSupplier) {
+    protected BaseAttribute(final String name, final Supplier<T> valueSupplier) {
         if (name.isEmpty()) {
             throw new IllegalArgumentException("Default attribute name must not be empty");
         }

@@ -13,7 +13,7 @@ import java.util.function.Supplier;
  * @param <T> the type of the attribute
  */
 @Getter
-public class CustomAttribute<T> extends AbstractBaseAttribute<T> {
+public class CustomAttribute<T> extends BaseAttribute<T> {
     /**
      * Instantiates a new Custom attribute.
      *

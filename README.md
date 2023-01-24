@@ -38,7 +38,7 @@ You define a factory as follows:
 ```java
 
 @EntityFactory
-public class BasicEntityFactory extends AbstractBaseEntityFactory<BasicEntity> {
+public class BasicEntityFactory extends BaseEntityFactory<BasicEntity> {
     public static final String LONG_ATTRIBUTE_NAME = "myLongAttribute";
     public static final String STRING_ATTRIBUTE_NAME = "myStringAttribute";
     
@@ -53,7 +53,7 @@ public class BasicEntityFactory extends AbstractBaseEntityFactory<BasicEntity> {
     // If you don't override it then the entity will be produced with none of its values set
     @Override
     protected Map<String, DefaultAttribute<?>> getDefaultAttributes(
-            AbstractBaseEntityFactory<?>... dependentFactories
+            BaseEntityFactory<?>... dependentFactories
     ) {
         return toAttributeMap(
                 new DefaultAttribute<>(
@@ -89,7 +89,8 @@ public class EntityCreator {
 
 ## Overriding Default Attributes
 
-Custom attributes can be specified using the `withCustomAttributes()` function. In the example below, each entity will have
+Custom attributes can be specified using the `withCustomAttributes()` function. In the example below, each entity will
+have
 `myLongAttribute` set to `12`, overriding the default attribute creation rule specified in the factory itself:
 
 ```java
@@ -118,7 +119,7 @@ A set number of attempts will be made to generate each unique value, after which
 ```java
 
 @EntityFactory
-public class BasicEntityFactory extends AbstractBaseEntityFactory<BasicEntity> {
+public class BasicEntityFactory extends BaseEntityFactory<BasicEntity> {
     public static final String LONG_ATTRIBUTE_NAME = "myLongAttribute";
     public static final String STRING_ATTRIBUTE_NAME = "myStringAttribute";
     
@@ -130,17 +131,17 @@ public class BasicEntityFactory extends AbstractBaseEntityFactory<BasicEntity> {
 
     @Override
     protected Map<String, DefaultAttribute<?>> getDefaultAttributes(
-            AbstractBaseEntityFactory<?>... dependentFactories
+            BaseEntityFactory<?>... dependentFactories
     ) {
         return toAttributeMap(
                 // All myLongAttribute values are guaranteed to be unique. If this is not possible, an exception will be thrown
                 new DefaultAttribute<>(
                         BasicEntityFactory.LONG_ATTRIBUTE_NAME,
-                        () -> AbstractBaseEntityFactory.faker.number().numberBetween(1L, 5L), true
+                        () -> BaseEntityFactory.faker.number().numberBetween(1L, 5L), true
                 ),
                 new DefaultAttribute<>(
                         BasicEntityFactory.STRING_ATTRIBUTE_NAME,
-                        () -> AbstractBaseEntityFactory.faker.lorem().sentence()
+                        () -> BaseEntityFactory.faker.lorem().sentence()
                 )
         );
     }
@@ -150,7 +151,8 @@ public class BasicEntityFactory extends AbstractBaseEntityFactory<BasicEntity> {
 ## One-to-many and many-to-many relationships
 
 Say you have two entities, parent and child. A parent can have between zero and many children, while a child must have a
-parent. This type of relationship can easily be set up so that when a factory creates a child, it also creates and links to a
+parent. This type of relationship can easily be set up so that when a factory creates a child, it also creates and links
+to a
 child's parent entity.
 
 ```java
@@ -182,7 +184,7 @@ public class ChildEntity {
 }
 
 @EntityFactory
-public class ParentEntityFactory extends AbstractBaseEntityFactory<ParentEntity> {
+public class ParentEntityFactory extends BaseEntityFactory<ParentEntity> {
     public static final String STRING_ATTRIBUTE_NAME = "stringAttribute";
 
     @Autowired
@@ -192,7 +194,7 @@ public class ParentEntityFactory extends AbstractBaseEntityFactory<ParentEntity>
 }
 
 @EntityFactory
-public class ChildEntityFactory extends AbstractBaseEntityFactory<ChildEntity> {
+public class ChildEntityFactory extends BaseEntityFactory<ChildEntity> {
     public static final String PARENT_ATTRIBUTE_NAME = "parent";
 
     @Autowired
@@ -207,7 +209,7 @@ public class ChildEntityFactory extends AbstractBaseEntityFactory<ChildEntity> {
 
     @Override
     protected Map<String, DefaultAttribute<?>> getDefaultAttributes(
-            AbstractBaseEntityFactory<?>... dependentFactories
+            BaseEntityFactory<?>... dependentFactories
     ) {
         return toAttributeMap(
                 // grab the parent entity factory from the dependentFactories and use it to persist a parent.
@@ -260,6 +262,7 @@ public class NewUser {
     }
 }
 ```
+
 ```java
 public interface NewUserRepository extends JpaRepository<NewUser, Long> {
 }
@@ -267,7 +270,7 @@ public interface NewUserRepository extends JpaRepository<NewUser, Long> {
 
 ```java
 @EntityFactory
-public class NewUserFactory extends AbstractBaseEntityFactory<NewUser> {
+public class NewUserFactory extends BaseEntityFactory<NewUser> {
     private static final Faker faker = new Faker();
 
     public NewUserFactory(final NewUserRepository repository) {
@@ -276,7 +279,7 @@ public class NewUserFactory extends AbstractBaseEntityFactory<NewUser> {
 
     @Override
     protected Map<String, DefaultAttribute<?>> getDefaultAttributes(
-            AbstractBaseEntityFactory<?>... dependentFactories
+            BaseEntityFactory<?>... dependentFactories
     ) {
         return toAttributeMap(
                 new DefaultAttribute<>("username", ()-> NewUserFactory.faker.name().username()),
@@ -303,7 +306,9 @@ public class EntityCreator {
     }
 }
 ```
+
 Example output from EntityCreator:
+
 ```
 NewUser{id=1, username='jeraldine.corkery', firstName='Earl', lastName='Ziemann', address='560 Lind Trail, Port Rogertown, SD 32013', email='tyree.nolan@hotmail.com', age='22', phoneNumber='(308) 228-8767'}
 NewUser{id=2, username='kelly.emmerich', firstName='Israel', lastName='Wuckert', address='289 Pouros Brook, Kassulkechester, AZ 29686', email='chere.howe@gmail.com', age='75', phoneNumber='(409) 919-8977'}

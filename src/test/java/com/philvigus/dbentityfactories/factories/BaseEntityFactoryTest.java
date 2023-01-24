@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
-class AbstractBaseEntityFactoryTest {
+class BaseEntityFactoryTest {
     @Autowired
     BasicEntityFactory basicEntityFactory;
 
@@ -282,10 +282,10 @@ class AbstractBaseEntityFactoryTest {
         assertDoesNotThrow(() -> entityForClearingValuesTestFactory
                 .withCustomAttributes(new CustomAttribute<>(
                         EntityForClearingValuesTestFactory.UNIQUE_STRING,
-                        ()-> "a different value"))
+                        () -> "a different value"))
                 .create());
 
-        assertThrows(EntityFactoryException.class,() -> entityForClearingValuesTestFactory.create());
+        assertThrows(EntityFactoryException.class, () -> entityForClearingValuesTestFactory.create());
 
     }
 

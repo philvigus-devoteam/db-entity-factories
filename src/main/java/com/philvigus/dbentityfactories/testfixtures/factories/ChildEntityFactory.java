@@ -2,7 +2,7 @@ package com.philvigus.dbentityfactories.testfixtures.factories;
 
 import com.philvigus.dbentityfactories.annotations.EntityFactory;
 import com.philvigus.dbentityfactories.attributes.DefaultAttribute;
-import com.philvigus.dbentityfactories.factories.AbstractBaseEntityFactory;
+import com.philvigus.dbentityfactories.factories.BaseEntityFactory;
 import com.philvigus.dbentityfactories.testfixtures.entities.ChildEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,7 +13,7 @@ import java.util.Map;
  * The Child entity factory used by tests for this library.
  */
 @EntityFactory
-public class ChildEntityFactory extends AbstractBaseEntityFactory<ChildEntity> {
+public class ChildEntityFactory extends BaseEntityFactory<ChildEntity> {
     public static final String PARENT_ATTRIBUTE_NAME = "parent";
 
     /**
@@ -28,7 +28,7 @@ public class ChildEntityFactory extends AbstractBaseEntityFactory<ChildEntity> {
     }
 
     @Override
-    protected Map<String, DefaultAttribute<?>> getDefaultAttributes(final AbstractBaseEntityFactory<?>... dependentFactories) {
+    protected Map<String, DefaultAttribute<?>> getDefaultAttributes(final BaseEntityFactory<?>... dependentFactories) {
         return toAttributeMap(
                 new DefaultAttribute<>(ChildEntityFactory.PARENT_ATTRIBUTE_NAME, dependentFactories[0]::persist)
         );

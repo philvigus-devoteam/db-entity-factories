@@ -15,7 +15,7 @@ import java.util.function.Supplier;
  * @param <T> the type of the attribute
  */
 @Getter
-public class DefaultAttribute<T> extends AbstractBaseAttribute<T> {
+public class DefaultAttribute<T> extends BaseAttribute<T> {
     /**
      * Defines the maximum attempts to generate a unique value before an exception is thrown.
      */

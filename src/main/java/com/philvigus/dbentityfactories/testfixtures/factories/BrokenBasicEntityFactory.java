@@ -2,7 +2,7 @@ package com.philvigus.dbentityfactories.testfixtures.factories;
 
 import com.philvigus.dbentityfactories.annotations.EntityFactory;
 import com.philvigus.dbentityfactories.attributes.DefaultAttribute;
-import com.philvigus.dbentityfactories.factories.AbstractBaseEntityFactory;
+import com.philvigus.dbentityfactories.factories.BaseEntityFactory;
 import com.philvigus.dbentityfactories.testfixtures.entities.BasicEntity;
 import net.datafaker.Faker;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,7 +13,7 @@ import java.util.Map;
  * The Basic entity factory used by tests for this library.
  */
 @EntityFactory
-public class BrokenBasicEntityFactory extends AbstractBaseEntityFactory<BasicEntity> {
+public class BrokenBasicEntityFactory extends BaseEntityFactory<BasicEntity> {
     public static final String INCORRECT_ATTRIBUTE_NAME = "iDoNotExist";
     public static final String STRING_ATTRIBUTE_NAME = "myStringAttribute";
 
@@ -29,7 +29,7 @@ public class BrokenBasicEntityFactory extends AbstractBaseEntityFactory<BasicEnt
     }
 
     @Override
-    protected Map<String, DefaultAttribute<?>> getDefaultAttributes(final AbstractBaseEntityFactory<?>... dependentFactories) {
+    protected Map<String, DefaultAttribute<?>> getDefaultAttributes(final BaseEntityFactory<?>... dependentFactories) {
         return toAttributeMap(
                 new DefaultAttribute<>(BrokenBasicEntityFactory.INCORRECT_ATTRIBUTE_NAME, () -> BrokenBasicEntityFactory.faker.number().numberBetween(1L, 5L)),
                 new DefaultAttribute<>(BrokenBasicEntityFactory.STRING_ATTRIBUTE_NAME, () -> BrokenBasicEntityFactory.faker.lorem().sentence())
