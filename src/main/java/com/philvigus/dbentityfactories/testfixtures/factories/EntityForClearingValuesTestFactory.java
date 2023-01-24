@@ -3,13 +3,14 @@ package com.philvigus.dbentityfactories.testfixtures.factories;
 import com.philvigus.dbentityfactories.annotations.EntityFactory;
 import com.philvigus.dbentityfactories.attributes.DefaultAttribute;
 import com.philvigus.dbentityfactories.factories.BaseEntityFactory;
+import com.philvigus.dbentityfactories.factories.HibernateEntityFactory;
 import com.philvigus.dbentityfactories.testfixtures.entities.EntityWithUniqueAttributes;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Map;
 
 @EntityFactory
-public class EntityForClearingValuesTestFactory extends BaseEntityFactory<EntityWithUniqueAttributes> {
+public class EntityForClearingValuesTestFactory extends HibernateEntityFactory<EntityWithUniqueAttributes> {
     public static final String UNIQUE_STRING = "uniqueString";
     public static final String UNIQUE_LONG = "uniqueLong";
 

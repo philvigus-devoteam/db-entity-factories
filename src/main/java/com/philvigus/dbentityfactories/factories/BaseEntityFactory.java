@@ -3,7 +3,6 @@ package com.philvigus.dbentityfactories.factories;
 import com.philvigus.dbentityfactories.attributes.CustomAttribute;
 import com.philvigus.dbentityfactories.attributes.DefaultAttribute;
 import com.philvigus.dbentityfactories.exceptions.EntityFactoryException;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.InvocationTargetException;
@@ -30,11 +29,6 @@ public abstract class BaseEntityFactory<T> {
     protected final Class<T> entityClass;
 
     /**
-     * The repository used to save instances of the entity.
-     */
-    protected final JpaRepository<T, Long> repository;
-
-    /**
      * A list of custom attributes used to override default attributes when creating entities.
      */
     protected Map<String, CustomAttribute<?>> customAttributes;
@@ -48,15 +42,12 @@ public abstract class BaseEntityFactory<T> {
      * Instantiates a new base entity factory.
      *
      * @param entityClass        the entity class
-     * @param repository         the repository used to save instances of the entity
      * @param dependentFactories any factories the creation of this entity depends on
      */
     protected BaseEntityFactory(
             final Class<T> entityClass,
-            final JpaRepository<T, Long> repository,
             final BaseEntityFactory<?>... dependentFactories) {
         this.entityClass = entityClass;
-        this.repository = repository;
 
         this.customAttributes = new ConcurrentHashMap<>();
         this.defaultAttributes = getDefaultAttributes(dependentFactories);
@@ -113,9 +104,7 @@ public abstract class BaseEntityFactory<T> {
      *
      * @return the created and saved entity
      */
-    public T persist() {
-        return repository.save(getEntityWithAttributesSet(customAttributes));
-    }
+    public abstract T persist();
 
     /**
      * Creates a specified number of entities.

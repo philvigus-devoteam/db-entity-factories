@@ -1,7 +1,7 @@
 package com.philvigus.dbentityfactories.testfixtures.factories;
 
 import com.philvigus.dbentityfactories.annotations.EntityFactory;
-import com.philvigus.dbentityfactories.factories.BaseEntityFactory;
+import com.philvigus.dbentityfactories.factories.HibernateEntityFactory;
 import com.philvigus.dbentityfactories.testfixtures.entities.ParentEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * The Parent entity factory used by tests for this library.
  */
 @EntityFactory
-public class ParentEntityFactory extends BaseEntityFactory<ParentEntity> {
+public class ParentEntityFactory extends HibernateEntityFactory<ParentEntity> {
     /**
      * Instantiates a new Parent entity factory.
      *

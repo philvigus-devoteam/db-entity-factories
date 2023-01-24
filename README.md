@@ -38,16 +38,16 @@ You define a factory as follows:
 ```java
 
 @EntityFactory
-public class BasicEntityFactory extends BaseEntityFactory<BasicEntity> {
+public class BasicEntityFactory extends HibernateEntityFactory<BasicEntity> {
     public static final String LONG_ATTRIBUTE_NAME = "myLongAttribute";
     public static final String STRING_ATTRIBUTE_NAME = "myStringAttribute";
-    
+
     private static final Faker faker = new Faker();
 
     public BasicEntityFactory(final JpaRepository<BasicEntity, Long> repository) {
         super(BasicEntity.class, repository);
     }
-    
+
     // Overriding this method allows you to set up any default attribute values for entities produced by this factory
     // Entities can have fixed or, in this case, random values generated each time an entity is created
     // If you don't override it then the entity will be produced with none of its values set
@@ -119,10 +119,10 @@ A set number of attempts will be made to generate each unique value, after which
 ```java
 
 @EntityFactory
-public class BasicEntityFactory extends BaseEntityFactory<BasicEntity> {
+public class BasicEntityFactory extends HibernateEntityFactory<BasicEntity> {
     public static final String LONG_ATTRIBUTE_NAME = "myLongAttribute";
     public static final String STRING_ATTRIBUTE_NAME = "myStringAttribute";
-    
+
     private static final Faker faker = new Faker();
 
     public BasicEntityFactory(final JpaRepository<BasicEntity, Long> repository) {
@@ -137,11 +137,11 @@ public class BasicEntityFactory extends BaseEntityFactory<BasicEntity> {
                 // All myLongAttribute values are guaranteed to be unique. If this is not possible, an exception will be thrown
                 new DefaultAttribute<>(
                         BasicEntityFactory.LONG_ATTRIBUTE_NAME,
-                        () -> BaseEntityFactory.faker.number().numberBetween(1L, 5L), true
+                        () -> BasicEntity.faker.number().numberBetween(1L, 5L), true
                 ),
                 new DefaultAttribute<>(
                         BasicEntityFactory.STRING_ATTRIBUTE_NAME,
-                        () -> BaseEntityFactory.faker.lorem().sentence()
+                        () -> BasicEntity.faker.lorem().sentence()
                 )
         );
     }
@@ -184,7 +184,7 @@ public class ChildEntity {
 }
 
 @EntityFactory
-public class ParentEntityFactory extends BaseEntityFactory<ParentEntity> {
+public class ParentEntityFactory extends HibernateEntityFactory<ParentEntity> {
     public static final String STRING_ATTRIBUTE_NAME = "stringAttribute";
 
     @Autowired
@@ -194,7 +194,7 @@ public class ParentEntityFactory extends BaseEntityFactory<ParentEntity> {
 }
 
 @EntityFactory
-public class ChildEntityFactory extends BaseEntityFactory<ChildEntity> {
+public class ChildEntityFactory extends HibernateEntityFactory<ChildEntity> {
     public static final String PARENT_ATTRIBUTE_NAME = "parent";
 
     @Autowired
@@ -225,6 +225,7 @@ public class ChildEntityFactory extends BaseEntityFactory<ChildEntity> {
 ### Easily create and persist dummy users to a database
 
 ```java
+
 @Entity
 @Getter
 @Setter
@@ -269,8 +270,9 @@ public interface NewUserRepository extends JpaRepository<NewUser, Long> {
 ```
 
 ```java
+
 @EntityFactory
-public class NewUserFactory extends BaseEntityFactory<NewUser> {
+public class NewUserFactory extends HibernateEntityFactory<NewUser> {
     private static final Faker faker = new Faker();
 
     public NewUserFactory(final NewUserRepository repository) {
@@ -282,7 +284,7 @@ public class NewUserFactory extends BaseEntityFactory<NewUser> {
             BaseEntityFactory<?>... dependentFactories
     ) {
         return toAttributeMap(
-                new DefaultAttribute<>("username", ()-> NewUserFactory.faker.name().username()),
+                new DefaultAttribute<>("username", () -> NewUserFactory.faker.name().username()),
                 new DefaultAttribute<>("firstName", () -> NewUserFactory.faker.name().firstName()),
                 new DefaultAttribute<>("lastName", () -> NewUserFactory.faker.name().lastName()),
                 new DefaultAttribute<>("address", () -> NewUserFactory.faker.address().fullAddress()),

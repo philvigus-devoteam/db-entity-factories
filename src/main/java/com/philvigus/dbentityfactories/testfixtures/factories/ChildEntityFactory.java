@@ -3,6 +3,7 @@ package com.philvigus.dbentityfactories.testfixtures.factories;
 import com.philvigus.dbentityfactories.annotations.EntityFactory;
 import com.philvigus.dbentityfactories.attributes.DefaultAttribute;
 import com.philvigus.dbentityfactories.factories.BaseEntityFactory;
+import com.philvigus.dbentityfactories.factories.HibernateEntityFactory;
 import com.philvigus.dbentityfactories.testfixtures.entities.ChildEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,7 +14,7 @@ import java.util.Map;
  * The Child entity factory used by tests for this library.
  */
 @EntityFactory
-public class ChildEntityFactory extends BaseEntityFactory<ChildEntity> {
+public class ChildEntityFactory extends HibernateEntityFactory<ChildEntity> {
     public static final String PARENT_ATTRIBUTE_NAME = "parent";
 
     /**

@@ -5,12 +5,13 @@ import com.philvigus.dbentityfactories.attributes.DefaultAttribute;
 import com.philvigus.dbentityfactories.examples.entities.NewUser;
 import com.philvigus.dbentityfactories.examples.repositories.NewUserRepository;
 import com.philvigus.dbentityfactories.factories.BaseEntityFactory;
+import com.philvigus.dbentityfactories.factories.HibernateEntityFactory;
 import net.datafaker.Faker;
 
 import java.util.Map;
 
 @EntityFactory
-public class NewUserFactory extends BaseEntityFactory<NewUser> {
+public class NewUserFactory extends HibernateEntityFactory<NewUser> {
     private static final Faker faker = new Faker();
 
     public NewUserFactory(final NewUserRepository repository) {
