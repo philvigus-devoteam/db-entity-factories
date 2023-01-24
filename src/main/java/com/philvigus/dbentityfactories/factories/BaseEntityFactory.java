@@ -194,15 +194,16 @@ public abstract class BaseEntityFactory<T> {
     protected T setEntityAttributes(final T entity, final Map<String, CustomAttribute<?>> customAttributes) {
         // custom attribute values are set first. We track the names of those that are set so that we don't overwrite
         // them with default attribute values
-        final List<String> customAttributesSet = new ArrayList<>();
-
-        setCustomAttributesOnEntity(customAttributes, customAttributesSet, entity);
+        final List<String> customAttributesSet = setCustomAttributesOnEntity(customAttributes, entity);
+        
         setDefaultAttributesOnEntity(customAttributesSet, entity);
 
         return entity;
     }
 
-    private void setCustomAttributesOnEntity(final Map<String, CustomAttribute<?>> customAttributes, final List<String> customAttributesSet, final T entity) {
+    private List<String> setCustomAttributesOnEntity(final Map<String, CustomAttribute<?>> customAttributes, final T entity) {
+        final List<String> customAttributesSet = new ArrayList<>();
+
         customAttributes.forEach((name, customAttribute) -> {
             Object customValue;
 
@@ -218,6 +219,8 @@ public abstract class BaseEntityFactory<T> {
             setEntityAttribute(entity, name, customValue);
             customAttributesSet.add(name);
         });
+
+        return customAttributesSet;
     }
 
     private void setDefaultAttributesOnEntity(final List<String> customAttributesSet, final T entity) {
