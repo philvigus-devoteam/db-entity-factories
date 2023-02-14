@@ -1,4 +1,4 @@
-package com.philvigus.dbentityfactories.testfixtures.factories;
+package com.philvigus.dbentityfactories.testfixtures.hibernate.factories;
 
 import com.philvigus.dbentityfactories.annotations.EntityFactory;
 import com.philvigus.dbentityfactories.attributes.DefaultAttribute;

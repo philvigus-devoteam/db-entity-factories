@@ -2,6 +2,8 @@ package com.philvigus.dbentityfactories.testfixtures.repositories;
 
 import com.philvigus.dbentityfactories.testfixtures.entities.ChildEntity;
 import com.philvigus.dbentityfactories.testfixtures.entities.ParentEntity;
+import com.philvigus.dbentityfactories.testfixtures.hibernate.repositories.ChildEntityRepository;
+import com.philvigus.dbentityfactories.testfixtures.hibernate.repositories.ParentEntityRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;

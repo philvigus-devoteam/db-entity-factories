@@ -1,6 +1,7 @@
 package com.philvigus.dbentityfactories.testfixtures.repositories;
 
 import com.philvigus.dbentityfactories.testfixtures.entities.BasicEntity;
+import com.philvigus.dbentityfactories.testfixtures.hibernate.repositories.BasicEntityRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;

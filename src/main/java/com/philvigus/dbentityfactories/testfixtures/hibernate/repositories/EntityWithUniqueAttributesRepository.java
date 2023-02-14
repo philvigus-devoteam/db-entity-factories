@@ -1,4 +1,4 @@
-package com.philvigus.dbentityfactories.testfixtures.repositories;
+package com.philvigus.dbentityfactories.testfixtures.hibernate.repositories;
 
 import com.philvigus.dbentityfactories.testfixtures.entities.EntityWithUniqueAttributes;
 import org.springframework.data.jpa.repository.JpaRepository;
