@@ -33,7 +33,7 @@ public class BasicEntity {
 }
 ```
 
-You define a factory as follows:
+You define a factory as follows. This example uses Hibernate as its library for persisting to the database:
 
 ```java
 
@@ -219,6 +219,67 @@ public class ChildEntityFactory extends HibernateEntityFactory<ChildEntity> {
     }
 }
 ```
+
+## Using different persistence libraries
+
+### Hibernate
+
+The majority of the examples in the repository use Hibernate as a persistence library. All you need to do to create a
+factory is
+extend [HibernateEntityFactory](./src/main/java/com/philvigus/dbentityfactories/factories/HibernateEntityFactory.java)
+as demonstrated multiple times in the previous sections.
+
+### JDBC
+
+[BasicEntityJdbcFactory](./src/main/java/com/philvigus/dbentityfactories/testfixtures/jdbc/factories/BasicEntityJdbcFactory.java)
+is an example of how to use this library with JDBC.
+
+```java
+
+@EntityFactory
+public class BasicEntityJdbcFactory extends BaseEntityFactory<BasicEntity> {
+    public static final String LONG_ATTRIBUTE_NAME = "myLongAttribute";
+    public static final String STRING_ATTRIBUTE_NAME = "myStringAttribute";
+
+    private static final Faker faker = new Faker();
+
+    private final BasicEntityJdbcRepository basicEntityJdbcRepository;
+
+    @Autowired
+    protected BasicEntityJdbcFactory(
+            BasicEntityJdbcRepository repository, BaseEntityFactory<?>... dependentFactories) {
+        super(BasicEntity.class, dependentFactories);
+
+        this.basicEntityJdbcRepository = repository;
+    }
+
+    @Override
+    protected Map<String, DefaultAttribute<?>> getDefaultAttributes(final BaseEntityFactory<?>... dependentFactories) {
+        return toAttributeMap(
+                new DefaultAttribute<>(BasicEntityJdbcFactory.LONG_ATTRIBUTE_NAME, () -> BasicEntityJdbcFactory.faker.number().numberBetween(1L, 5L)),
+                new DefaultAttribute<>(BasicEntityJdbcFactory.STRING_ATTRIBUTE_NAME, () -> BasicEntityJdbcFactory.faker.lorem().sentence())
+        );
+    }
+
+    @Override
+    public BasicEntity persist() {
+        return basicEntityJdbcRepository.save(getEntityWithAttributesSet(customAttributes));
+    }
+}
+```
+
+which makes use of a standard JDBC implementation of a repository:
+
+```java
+public interface BasicEntityJdbcRepository extends CrudRepository<BasicEntity, Long> {
+}
+```
+
+### Other libraries
+
+It is straightforward to implement factories using other persistence libraries. All you need to do is
+extend [BaseEntityFactory](./src/main/java/com/philvigus/dbentityfactories/factories/BaseEntityFactory.java),
+implementing the `persist` function using the appropriate method for your persistence library of choice.
 
 ## Examples
 
