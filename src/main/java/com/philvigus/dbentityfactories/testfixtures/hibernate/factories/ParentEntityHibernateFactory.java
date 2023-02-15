@@ -9,13 +9,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * The Parent entity factory used by tests for this library.
  */
 @EntityFactory
-public class ParentEntityFactory extends HibernateEntityFactory<ParentEntity> {
+public class ParentEntityHibernateFactory extends HibernateEntityFactory<ParentEntity> {
     /**
      * Instantiates a new Parent entity factory.
      *
      * @param repository the repository used to save instances of the entity
      */
-    public ParentEntityFactory(final JpaRepository<ParentEntity, Long> repository) {
+    public ParentEntityHibernateFactory(final JpaRepository<ParentEntity, Long> repository) {
         super(ParentEntity.class, repository);
     }
 }

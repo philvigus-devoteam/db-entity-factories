@@ -1,9 +1,7 @@
-package com.philvigus.dbentityfactories.testfixtures.repositories;
+package com.philvigus.dbentityfactories.testfixtures.hibernate.repositories;
 
 import com.philvigus.dbentityfactories.testfixtures.entities.ChildEntity;
 import com.philvigus.dbentityfactories.testfixtures.entities.ParentEntity;
-import com.philvigus.dbentityfactories.testfixtures.hibernate.repositories.ChildEntityRepository;
-import com.philvigus.dbentityfactories.testfixtures.hibernate.repositories.ParentEntityRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -17,12 +15,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(MockitoExtension.class)
 @DataJpaTest
-class ChildEntityRepositoryTest {
+class ChildEntityHibernateRepositoryTest {
     @Autowired
-    ChildEntityRepository childEntityRepository;
+    ChildEntityHibernateRepository childEntityRepository;
 
     @Autowired
-    ParentEntityRepository parentEntityRepository;
+    ParentEntityHibernateRepository parentEntityRepository;
 
     @Test
     void saveShouldSaveTheEntityToTheDatabase() {

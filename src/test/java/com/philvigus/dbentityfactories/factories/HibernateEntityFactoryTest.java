@@ -7,10 +7,10 @@ import com.philvigus.dbentityfactories.testfixtures.entities.ChildEntity;
 import com.philvigus.dbentityfactories.testfixtures.entities.EntityWithUniqueAttributes;
 import com.philvigus.dbentityfactories.testfixtures.entities.ParentEntity;
 import com.philvigus.dbentityfactories.testfixtures.hibernate.factories.*;
-import com.philvigus.dbentityfactories.testfixtures.hibernate.repositories.BasicEntityRepository;
-import com.philvigus.dbentityfactories.testfixtures.hibernate.repositories.ChildEntityRepository;
-import com.philvigus.dbentityfactories.testfixtures.hibernate.repositories.EntityWithUniqueAttributesRepository;
-import com.philvigus.dbentityfactories.testfixtures.hibernate.repositories.ParentEntityRepository;
+import com.philvigus.dbentityfactories.testfixtures.hibernate.repositories.BasicEntityHibernateRepository;
+import com.philvigus.dbentityfactories.testfixtures.hibernate.repositories.ChildEntityHibernateRepository;
+import com.philvigus.dbentityfactories.testfixtures.hibernate.repositories.EntityWithUniqueAttributesHibernateRepository;
+import com.philvigus.dbentityfactories.testfixtures.hibernate.repositories.ParentEntityHibernateRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -28,34 +28,34 @@ import static org.junit.jupiter.api.Assertions.*;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
 class HibernateEntityFactoryTest {
     @Autowired
-    BasicEntityFactory basicEntityFactory;
+    BasicEntityHibernateFactory basicEntityHibernateFactory;
 
     @Autowired
-    EntityWithUniqueAttributesFactory entityWithUniqueAttributesFactory;
+    EntityWithUniqueAttributesHibernateFactory entityWithUniqueAttributesFactory;
 
     @Autowired
-    ChildEntityFactory childEntityFactory;
+    ChildEntityHibernateFactory childEntityFactory;
 
     @Autowired
-    BasicEntityRepository basicEntityRepository;
+    BasicEntityHibernateRepository basicEntityRepository;
 
     @Autowired
-    EntityWithUniqueAttributesRepository entityWithUniqueAttributesRepository;
+    EntityWithUniqueAttributesHibernateRepository entityWithUniqueAttributesRepository;
 
     @Autowired
-    ChildEntityRepository childEntityRepository;
+    ChildEntityHibernateRepository childEntityRepository;
     @Autowired
-    BrokenBasicEntityFactory brokenBasicEntityFactory;
+    BrokenBasicEntityHibernateFactory brokenBasicEntityHibernateFactory;
 
     @Autowired
-    EntityForClearingValuesTestFactory entityForClearingValuesTestFactory;
+    EntityForClearingValuesTestHibernateFactory entityForClearingValuesTestFactory;
 
     @Autowired
-    private ParentEntityRepository parentEntityRepository;
+    private ParentEntityHibernateRepository parentEntityRepository;
 
     @Test
     void makeCanReturnASingleBasicEntityWithItsAttributesCorrectlySet() {
-        final BasicEntity basicEntity = basicEntityFactory.create();
+        final BasicEntity basicEntity = basicEntityHibernateFactory.create();
 
         assertBasicEntityCorrectlyMadeWithDefaultAttributes(basicEntity);
     }
@@ -64,7 +64,7 @@ class HibernateEntityFactoryTest {
     void makeCanReturnAListOfMultipleBasicEntitiesWithTheirAttributesCorrectlySet() {
         final int numberOfEntities = 2;
 
-        final List<BasicEntity> basicEntities = basicEntityFactory.create(numberOfEntities);
+        final List<BasicEntity> basicEntities = basicEntityHibernateFactory.create(numberOfEntities);
 
         assertEquals(numberOfEntities, basicEntities.size());
         assertBasicEntityCorrectlyMadeWithDefaultAttributes(basicEntities.get(0));
@@ -76,9 +76,9 @@ class HibernateEntityFactoryTest {
         final Long customLongValue = 999L;
         final String customStringValue = "a custom string value";
 
-        final BasicEntity basicEntity = basicEntityFactory.withCustomAttributes(
-                new CustomAttribute<>(BasicEntityFactory.LONG_ATTRIBUTE_NAME, () -> customLongValue),
-                new CustomAttribute<>(BasicEntityFactory.STRING_ATTRIBUTE_NAME, () -> customStringValue)
+        final BasicEntity basicEntity = basicEntityHibernateFactory.withCustomAttributes(
+                new CustomAttribute<>(BasicEntityHibernateFactory.LONG_ATTRIBUTE_NAME, () -> customLongValue),
+                new CustomAttribute<>(BasicEntityHibernateFactory.STRING_ATTRIBUTE_NAME, () -> customStringValue)
         ).create();
 
         assertNull(basicEntity.getId());
@@ -96,7 +96,7 @@ class HibernateEntityFactoryTest {
         final String customStringName = "myStringAttribute";
         final String customStringValue = "a custom string value";
 
-        final List<BasicEntity> basicEntities = basicEntityFactory.withCustomAttributes(
+        final List<BasicEntity> basicEntities = basicEntityHibernateFactory.withCustomAttributes(
                 new CustomAttribute<>(customLongName, () -> customLongValue),
                 new CustomAttribute<>(customStringName, () -> customStringValue)
         ).create(numberOfEntities);
@@ -112,12 +112,12 @@ class HibernateEntityFactoryTest {
 
     @Test
     void makeThrowsAnExceptionIfCopiesIsLessThanOne() {
-        assertThrows(IllegalArgumentException.class, () -> basicEntityFactory.create(0));
+        assertThrows(IllegalArgumentException.class, () -> basicEntityHibernateFactory.create(0));
     }
 
     @Test
     void createCanReturnAndSaveASingleBasicEntityWithItsAttributesCorrectlySetToTheDatabase() {
-        final BasicEntity basicEntity = basicEntityFactory.persist();
+        final BasicEntity basicEntity = basicEntityHibernateFactory.persist();
         final List<BasicEntity> savedEntities = basicEntityRepository.findAll();
 
         assertBasicEntityCorrectlyCreatedWithDefaultAttributes(basicEntity);
@@ -130,7 +130,7 @@ class HibernateEntityFactoryTest {
     void createCanReturnAndSaveMultipleBasicEntitiesWithTheirAttributesCorrectlySetToTheDatabase() {
         final int numberOfEntities = 2;
 
-        final List<BasicEntity> basicEntities = basicEntityFactory.persist(numberOfEntities);
+        final List<BasicEntity> basicEntities = basicEntityHibernateFactory.persist(numberOfEntities);
         final List<BasicEntity> savedEntities = basicEntityRepository.findAll();
 
         assertEquals(numberOfEntities, basicEntities.size());
@@ -150,7 +150,7 @@ class HibernateEntityFactoryTest {
         final String customStringName = "myStringAttribute";
         final String customStringValue = "a custom string value";
 
-        final BasicEntity basicEntity = basicEntityFactory.withCustomAttributes(
+        final BasicEntity basicEntity = basicEntityHibernateFactory.withCustomAttributes(
                 new CustomAttribute<>(customLongName, () -> customLongValue),
                 new CustomAttribute<>(customStringName, () -> customStringValue)
         ).persist();
@@ -174,7 +174,7 @@ class HibernateEntityFactoryTest {
         final String customStringName = "myStringAttribute";
         final String customStringValue = "a custom string value";
 
-        final List<BasicEntity> basicEntities = basicEntityFactory.withCustomAttributes(
+        final List<BasicEntity> basicEntities = basicEntityHibernateFactory.withCustomAttributes(
                 new CustomAttribute<>(customLongName, () -> customLongValue),
                 new CustomAttribute<>(customStringName, () -> customStringValue)
         ).persist(numberOfEntities);
@@ -196,7 +196,7 @@ class HibernateEntityFactoryTest {
 
     @Test
     void createThrowsAnExceptionIfCopiesIsLessThanOne() {
-        assertThrows(IllegalArgumentException.class, () -> basicEntityFactory.persist(0));
+        assertThrows(IllegalArgumentException.class, () -> basicEntityHibernateFactory.persist(0));
     }
 
     @Test
@@ -254,14 +254,14 @@ class HibernateEntityFactoryTest {
         final String incorrectAttributeName = "I do not exist";
         final Long customLongValue = 999L;
 
-        assertThrows(EntityFactoryException.class, () -> basicEntityFactory.withCustomAttributes(
+        assertThrows(EntityFactoryException.class, () -> basicEntityHibernateFactory.withCustomAttributes(
                 new CustomAttribute<>(incorrectAttributeName, () -> customLongValue)
         ).create());
     }
 
     @Test
     void specifyingACustomAttributeWithANameThatDoesntExistOnAnEntityThrowsAnException() {
-        assertThrows(EntityFactoryException.class, () -> brokenBasicEntityFactory.persist());
+        assertThrows(EntityFactoryException.class, () -> brokenBasicEntityHibernateFactory.persist());
     }
 
     @Test
@@ -277,11 +277,11 @@ class HibernateEntityFactoryTest {
     void youCanResetTheUsedValuesOnSpecificAttribute() {
         entityForClearingValuesTestFactory.create();
 
-        entityForClearingValuesTestFactory.clearUsedValuesForAttribute(EntityForClearingValuesTestFactory.UNIQUE_LONG);
+        entityForClearingValuesTestFactory.clearUsedValuesForAttribute(EntityForClearingValuesTestHibernateFactory.UNIQUE_LONG);
 
         assertDoesNotThrow(() -> entityForClearingValuesTestFactory
                 .withCustomAttributes(new CustomAttribute<>(
-                        EntityForClearingValuesTestFactory.UNIQUE_STRING,
+                        EntityForClearingValuesTestHibernateFactory.UNIQUE_STRING,
                         () -> "a different value"))
                 .create());
 
@@ -291,13 +291,13 @@ class HibernateEntityFactoryTest {
 
     void assertBasicEntityCorrectlyMadeWithDefaultAttributes(final BasicEntity basicEntity) {
         assertNull(basicEntity.getId());
-        assertTrue(basicEntity.getMyLongAttribute() instanceof Long);
-        assertTrue(basicEntity.getMyStringAttribute() instanceof String);
+        assertNotNull(basicEntity.getMyLongAttribute());
+        assertNotNull(basicEntity.getMyStringAttribute());
     }
 
     void assertBasicEntityCorrectlyCreatedWithDefaultAttributes(final BasicEntity basicEntity) {
-        assertTrue(basicEntity.getId() instanceof Long);
-        assertTrue(basicEntity.getMyLongAttribute() instanceof Long);
-        assertTrue(basicEntity.getMyStringAttribute() instanceof String);
+        assertNotNull(basicEntity.getId());
+        assertNotNull(basicEntity.getMyLongAttribute());
+        assertNotNull(basicEntity.getMyStringAttribute());
     }
 }

@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 /**
  * The Basic entity repository used by tests to save the entity.
  */
-public interface BasicEntityRepository extends JpaRepository<BasicEntity, Long> {
+public interface BasicEntityHibernateRepository extends JpaRepository<BasicEntity, Long> {
 }

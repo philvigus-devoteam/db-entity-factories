@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 /**
  * The Child entity repository used by tests to save the entity.
  */
-public interface ChildEntityRepository extends JpaRepository<ChildEntity, Long> {
+public interface ChildEntityHibernateRepository extends JpaRepository<ChildEntity, Long> {
 }

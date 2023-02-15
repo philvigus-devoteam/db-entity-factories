@@ -14,7 +14,7 @@ import java.util.Map;
  * The Basic entity factory used by tests for this library.
  */
 @EntityFactory
-public class BasicEntityFactory extends HibernateEntityFactory<BasicEntity> {
+public class BasicEntityHibernateFactory extends HibernateEntityFactory<BasicEntity> {
     public static final String LONG_ATTRIBUTE_NAME = "myLongAttribute";
     public static final String STRING_ATTRIBUTE_NAME = "myStringAttribute";
 
@@ -25,15 +25,15 @@ public class BasicEntityFactory extends HibernateEntityFactory<BasicEntity> {
      *
      * @param repository the repository used to save instances of the entity
      */
-    public BasicEntityFactory(final JpaRepository<BasicEntity, Long> repository) {
+    public BasicEntityHibernateFactory(final JpaRepository<BasicEntity, Long> repository) {
         super(BasicEntity.class, repository);
     }
 
     @Override
     protected Map<String, DefaultAttribute<?>> getDefaultAttributes(final BaseEntityFactory<?>... dependentFactories) {
         return toAttributeMap(
-                new DefaultAttribute<>(BasicEntityFactory.LONG_ATTRIBUTE_NAME, () -> BasicEntityFactory.faker.number().numberBetween(1L, 5L)),
-                new DefaultAttribute<>(BasicEntityFactory.STRING_ATTRIBUTE_NAME, () -> BasicEntityFactory.faker.lorem().sentence())
+                new DefaultAttribute<>(BasicEntityHibernateFactory.LONG_ATTRIBUTE_NAME, () -> BasicEntityHibernateFactory.faker.number().numberBetween(1L, 5L)),
+                new DefaultAttribute<>(BasicEntityHibernateFactory.STRING_ATTRIBUTE_NAME, () -> BasicEntityHibernateFactory.faker.lorem().sentence())
         );
     }
 }

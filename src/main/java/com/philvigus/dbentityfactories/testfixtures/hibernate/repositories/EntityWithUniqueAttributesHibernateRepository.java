@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 /**
  * The Basic entity with unique attributes repository used by tests to save the entity.
  */
-public interface EntityWithUniqueAttributesRepository extends JpaRepository<EntityWithUniqueAttributes, Long> {
+public interface EntityWithUniqueAttributesHibernateRepository extends JpaRepository<EntityWithUniqueAttributes, Long> {
 }

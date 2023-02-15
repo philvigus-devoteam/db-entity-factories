@@ -1,7 +1,6 @@
-package com.philvigus.dbentityfactories.testfixtures.repositories;
+package com.philvigus.dbentityfactories.testfixtures.hibernate.repositories;
 
 import com.philvigus.dbentityfactories.testfixtures.entities.EntityWithUniqueAttributes;
-import com.philvigus.dbentityfactories.testfixtures.hibernate.repositories.EntityWithUniqueAttributesRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -15,9 +14,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(MockitoExtension.class)
 @DataJpaTest
-class EntityWithUniqueAttributesRepositoryTest {
+class EntityWithUniqueAttributesHibernateRepositoryTest {
     @Autowired
-    EntityWithUniqueAttributesRepository entityWithUniqueAttributesRepository;
+    EntityWithUniqueAttributesHibernateRepository entityWithUniqueAttributesRepository;
 
     @Test
     void saveShouldSaveTheEntityToTheDatabase() {

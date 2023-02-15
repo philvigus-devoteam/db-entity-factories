@@ -14,7 +14,7 @@ import java.util.Map;
  * The Basic entity factory used by tests for this library.
  */
 @EntityFactory
-public class BrokenBasicEntityFactory extends HibernateEntityFactory<BasicEntity> {
+public class BrokenBasicEntityHibernateFactory extends HibernateEntityFactory<BasicEntity> {
     public static final String INCORRECT_ATTRIBUTE_NAME = "iDoNotExist";
     public static final String STRING_ATTRIBUTE_NAME = "myStringAttribute";
 
@@ -25,15 +25,15 @@ public class BrokenBasicEntityFactory extends HibernateEntityFactory<BasicEntity
      *
      * @param repository the repository used to save instances of the entity
      */
-    public BrokenBasicEntityFactory(final JpaRepository<BasicEntity, Long> repository) {
+    public BrokenBasicEntityHibernateFactory(final JpaRepository<BasicEntity, Long> repository) {
         super(BasicEntity.class, repository);
     }
 
     @Override
     protected Map<String, DefaultAttribute<?>> getDefaultAttributes(final BaseEntityFactory<?>... dependentFactories) {
         return toAttributeMap(
-                new DefaultAttribute<>(BrokenBasicEntityFactory.INCORRECT_ATTRIBUTE_NAME, () -> BrokenBasicEntityFactory.faker.number().numberBetween(1L, 5L)),
-                new DefaultAttribute<>(BrokenBasicEntityFactory.STRING_ATTRIBUTE_NAME, () -> BrokenBasicEntityFactory.faker.lorem().sentence())
+                new DefaultAttribute<>(BrokenBasicEntityHibernateFactory.INCORRECT_ATTRIBUTE_NAME, () -> BrokenBasicEntityHibernateFactory.faker.number().numberBetween(1L, 5L)),
+                new DefaultAttribute<>(BrokenBasicEntityHibernateFactory.STRING_ATTRIBUTE_NAME, () -> BrokenBasicEntityHibernateFactory.faker.lorem().sentence())
         );
     }
 }

@@ -14,7 +14,7 @@ import java.util.Map;
  * The Child entity factory used by tests for this library.
  */
 @EntityFactory
-public class ChildEntityFactory extends HibernateEntityFactory<ChildEntity> {
+public class ChildEntityHibernateFactory extends HibernateEntityFactory<ChildEntity> {
     public static final String PARENT_ATTRIBUTE_NAME = "parent";
 
     /**
@@ -24,14 +24,14 @@ public class ChildEntityFactory extends HibernateEntityFactory<ChildEntity> {
      * @param parentEntityFactory the parent entity factory used to create the child's parent entity
      */
     @Autowired
-    public ChildEntityFactory(final JpaRepository<ChildEntity, Long> repository, final ParentEntityFactory parentEntityFactory) {
+    public ChildEntityHibernateFactory(final JpaRepository<ChildEntity, Long> repository, final ParentEntityHibernateFactory parentEntityFactory) {
         super(ChildEntity.class, repository, parentEntityFactory);
     }
 
     @Override
     protected Map<String, DefaultAttribute<?>> getDefaultAttributes(final BaseEntityFactory<?>... dependentFactories) {
         return toAttributeMap(
-                new DefaultAttribute<>(ChildEntityFactory.PARENT_ATTRIBUTE_NAME, dependentFactories[0]::persist)
+                new DefaultAttribute<>(ChildEntityHibernateFactory.PARENT_ATTRIBUTE_NAME, dependentFactories[0]::persist)
         );
     }
 }
